@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+
+    <properties>
+        <!-- 文件输出格式 -->
+        <property name="pattern">[%d],[%p],%X,%c,%m%n</property>
+    </properties>
+
+    <appenders>
+        <!-- 控制台输出 -->
+        <Console name="console" target="SYSTEM_OUT">
+            SYSTEM_OUT<ThresholdFilter level="debug" onMatch="ACCEPT"
+            onMismatch="DENY" />
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+
+        <!-- error统一日志 -->
+        <RollingFile name="common-error" fileName="${logging.path}/common-error.log"
+                     filePattern="${logging.path}/$${date:yyyy-MM}/common-error-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <!-- 只显示error级别日志 -->
+            <ThresholdFilter level="ERROR"/>
+            <Policies>
+                <!-- 每天更新一次,单位依赖于filePattern后的日期格式 -->
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="500M"/>
+            </Policies>
+            <!-- 最多备份14个 -->
+            <DefaultRolloverStrategy max="14"/>
+        </RollingFile>
+
+        <!-- 拦截器日志 -->
+        <RollingFile name="interceptor" fileName="${logging.path}/access.log"
+                     filePattern="${logging.path}/$${date:yyyy-MM}/access-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="500M"/>
+            </Policies>
+            <DefaultRolloverStrategy max="14"/>
+        </RollingFile>
+
+        <!-- 队列调度日志 -->
+        <RollingFile name="schedule" fileName="${logging.path}/schedule.log"
+                     filePattern="${logging.path}/$${date:yyyy-MM}/schedule-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="500M"/>
+            </Policies>
+            <DefaultRolloverStrategy max="7"/>
+        </RollingFile>
+
+        <!-- 业务默认日志 -->
+        <RollingFile name="http-remote" fileName="${logging.path}/http-remote.log"
+                     filePattern="${logging.path}/$${date:yyyy-MM}/http-remote-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="1000M"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="${logging.path}" maxDepth="2">
+                    <IfFileName glob="*/http-remote-*.log" />
+                    <IfLastModified age="7d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+
+        <!-- 业务默认日志 -->
+        <RollingFile name="common-default" fileName="${logging.path}/common-default.log"
+                     filePattern="${logging.path}/$${date:yyyy-MM}/common-default-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${pattern}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="1000M"/>
+            </Policies>
+            <DefaultRolloverStrategy max="14"/>
+        </RollingFile>
+    </appenders>
+
+
+    <loggers>
+
+        <!-- 拦截器日志 -->
+        <logger name="interceptor" level="info" additivity="false">
+            <appender-ref ref="interceptor"/> <appender-ref ref="console"/>
+        </logger>
+
+        <!-- 业务日志 -->
+        <logger name="common-default" level="info" additivity="false">
+            <appender-ref ref="common-default"/> <appender-ref ref="console"/>
+            <appender-ref ref="common-error"/>
+        </logger>
+
+        <!-- error统一日志 -->
+        <logger name="common-error" level="error" additivity="false">
+            <appender-ref ref="common-error"/> <appender-ref ref="console"/>
+            <appender-ref ref="common-default"/>
+        </logger>
+
+        <!-- 队列调度日志 -->
+        <logger name="schedule" level="info" additivity="false">
+            <appender-ref ref="schedule"/>
+            <appender-ref ref="common-error"/>
+        </logger>
+
+        <!-- 日志 -->
+        <logger name="http-remote" level="info" additivity="false">
+            <appender-ref ref="http-remote"/>
+            <appender-ref ref="common-error"/>
+        </logger>
+
+       <!-- <Logger name="org.mybatis" level="trace" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="common-default"/>
+        </Logger>-->
+
+       <!-- <logger name="com.xiangwang.njia.dao" level="debug" additivity="false">
+            <appender-ref ref="console"/>
+            <appender-ref ref="common-default"/>
+        </logger>-->
+
+		<Logger name="org.springframework.beans.factory" level="INFO"/>
+        <root level="info">
+            <appender-ref ref="console"/>
+            <appender-ref ref="common-default"/>
+            <appender-ref ref="common-error"/>
+        </root>
+    </loggers>
+</Configuration>
