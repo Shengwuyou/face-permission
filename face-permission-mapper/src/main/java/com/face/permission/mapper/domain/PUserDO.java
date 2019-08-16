@@ -1,5 +1,6 @@
 package com.face.permission.mapper.domain;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class PUserDO {
@@ -30,19 +31,19 @@ public class PUserDO {
     /**
      * 性别
      */
-    private Byte sex;
+    private Integer sex;
     /**
      * 状态
      */
-    private Byte status;
+    private Integer status;
     /**
      *
      */
-    private Date createTime;
+    private LocalDateTime createTime;
     /**
      *
      */
-    private Date updateTime;
+    private LocalDateTime updateTime;
     /**
      *
      */
@@ -96,35 +97,35 @@ public class PUserDO {
         this.headPic = headPic == null ? null : headPic.trim();
     }
 
-    public Byte getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Byte sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
-    public Date getCreateTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public LocalDateTime getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
 

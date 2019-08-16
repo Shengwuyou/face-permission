@@ -1,8 +1,8 @@
-package com.face.permission.service.impl;
+package com.face.permission.service.impl.test;
 
 import com.face.permission.mapper.dao.PUserMapper;
 import com.face.permission.mapper.domain.PUserDO;
-import com.face.permission.service.interfaces.ITestService;
+import com.face.permission.service.interfaces.test.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

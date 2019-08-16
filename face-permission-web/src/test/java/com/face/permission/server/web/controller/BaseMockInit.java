@@ -1,7 +1,7 @@
 package com.face.permission.server.web.controller;
 
 import com.face.permission.server.Application;
-import com.face.permission.service.interfaces.ITestService;
+import com.face.permission.service.interfaces.test.ITestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

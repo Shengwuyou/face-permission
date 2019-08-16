@@ -3,7 +3,7 @@ package com.face.permission.server.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.face.permission.common.utils.IpUtil;
 import com.face.permission.server.config.annoations.LoginIntercept;
-import com.face.permission.service.interfaces.ITestService;
+import com.face.permission.service.interfaces.test.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

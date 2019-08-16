@@ -1,7 +1,9 @@
 package com.face.permission.mapper.dao;
 
 import com.face.permission.mapper.domain.PAccountDO;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface PAccountMapper {
     int deleteByPrimaryKey(Long id);
 

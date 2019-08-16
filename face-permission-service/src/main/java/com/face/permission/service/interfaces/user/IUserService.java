@@ -1,4 +1,4 @@
-package com.face.permission.service.interfaces;
+package com.face.permission.service.interfaces.user;
 
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;

@@ -8,7 +8,7 @@ import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.responses.ResultInfo;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
-import com.face.permission.service.interfaces.IUserService;
+import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.*;
 import javax.websocket.server.PathParam;
-import java.util.Objects;
 
 /**
  * @Description

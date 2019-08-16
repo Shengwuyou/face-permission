@@ -14,7 +14,7 @@ import javax.validation.constraints.Pattern;
  * @Author xuyizhong
  * @Date 2019-07-18 15:43
  */
-public class UserRequest extends UserInfo{
+public class UserRequest extends UserInfo {
     /**
      * 发起注册请求的用户
      */
@@ -22,20 +22,20 @@ public class UserRequest extends UserInfo{
     /**
      * 昵称
      */
-    @NotBlank(message = "nickName 不能为空" , groups = CreateGroup.class)
-    @Pattern(regexp = ".{8,20}", message = "昵称长度范围8～20" , groups = CreateGroup.class)
+    @NotBlank(message = "nickName 不能为空", groups = CreateGroup.class)
+    @Pattern(regexp = ".{8,20}", message = "昵称长度范围8～20", groups = CreateGroup.class)
     private String nickName;
     /**
      * 手机号
      */
-    @NotBlank(message = "mobilePhone 不能为空" , groups = CreateGroup.class)
-    @Pattern(regexp = "^1[0-9]{10}", message = "手机号格式不正确" , groups = CreateGroup.class)
+    @NotBlank(message = "mobilePhone 不能为空", groups = CreateGroup.class)
+    @Pattern(regexp = "^1[0-9]{10}", message = "手机号格式不正确", groups = CreateGroup.class)
     private String mobilePhone;
     /**
      * 邮箱
      */
 //    @Email(regexp = "^[A-Za-z0-9\\u4e00-\\u9fa5]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$", message = "邮箱校验失败")
-    @Email(message = "邮箱格式非法" , groups = CreateGroup.class)
+    @Email(message = "邮箱格式非法", groups = CreateGroup.class)
     private String email;
     /**
      * 头像图片url
@@ -44,13 +44,13 @@ public class UserRequest extends UserInfo{
     /**
      * 性别
      */
-    @Pattern(regexp = "[0-2]+", message = "性别范围0，1，2" , groups = CreateGroup.class)
-    private String sex;
+    @Pattern(regexp = "[0-2]+", message = "性别范围0，1，2", groups = CreateGroup.class)
+    private Integer sex;
 
     /**
      * 状态(0未知/1有效 /2无效)
      */
-    @Pattern(regexp = "[0-2]+", message = "状态0，1，2" , groups = CreateGroup.class)
+    @Pattern(regexp = "[0-2]+", message = "状态0，1，2", groups = CreateGroup.class)
     private String status;
 
     /**
@@ -64,7 +64,7 @@ public class UserRequest extends UserInfo{
      * 密码
      */
     @NotBlank(message = "password 不能为空", groups = {CreateGroup.class, RetrieveGroup.class})
-    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "密码必须使用大小写字母和数字组合  8～16位", groups =  {CreateGroup.class, RetrieveGroup.class})
+    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "密码必须使用大小写字母和数字组合  8～16位", groups = {CreateGroup.class, RetrieveGroup.class})
     private String password;
     /**
      * 账号等级( 0~N)
@@ -128,12 +128,12 @@ public class UserRequest extends UserInfo{
         this.headPic = headPic;
     }
 
-    public String getSex() {
-        return sex;
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public Integer getSex() {
+        return sex;
     }
 
     public String getStatus() {

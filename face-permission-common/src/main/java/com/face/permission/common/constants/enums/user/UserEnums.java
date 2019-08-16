@@ -28,4 +28,27 @@ public class UserEnums {
             return msg;
         }
     }
+
+    public enum UserStatus{
+        UNKONW(0, "未知状态"),
+        AVAILABLE(1, "有效"),
+        UNAVAILABLE(2, "无效"),
+        ;
+
+        UserStatus(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        private Integer code;
+        private String msg;
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+    }
 }

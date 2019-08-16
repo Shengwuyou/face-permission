@@ -1,4 +1,4 @@
-package com.face.permission.service.interfaces;
+package com.face.permission.service.interfaces.test;
 
 /**
  * @Description
