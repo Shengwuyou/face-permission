@@ -12,6 +12,11 @@ public class HttpIpAddrUtil {
 
 	private static final Logger LOG = LoggerUtil.HTTP_REMOTE;
 
+	/**
+	 * 获取请求用户的IP
+	 * @param request
+	 * @return
+	 */
 	public static String getRemoteIp(HttpServletRequest request) {
 		String ipAddress = request.getHeader("x-forwarded-for");
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {

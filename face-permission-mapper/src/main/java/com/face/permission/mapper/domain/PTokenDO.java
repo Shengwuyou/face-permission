@@ -2,7 +2,7 @@ package com.face.permission.mapper.domain;
 
 import java.util.Date;
 
-public class PToken {
+public class PTokenDO {
     private Long id;
 
     private String uId;

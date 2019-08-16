@@ -1,17 +1,17 @@
 package com.face.permission.mapper.dao;
 
-import com.face.permission.mapper.domain.PAccount;
+import com.face.permission.mapper.domain.PAccountDO;
 
 public interface PAccountMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(PAccount record);
+    int insert(PAccountDO record);
 
-    int insertSelective(PAccount record);
+    int insertSelective(PAccountDO record);
 
-    PAccount selectByPrimaryKey(Long id);
+    PAccountDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(PAccount record);
+    int updateByPrimaryKeySelective(PAccountDO record);
 
-    int updateByPrimaryKey(PAccount record);
+    int updateByPrimaryKey(PAccountDO record);
 }

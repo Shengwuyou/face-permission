@@ -1,17 +1,17 @@
 package com.face.permission.mapper.dao;
 
-import com.face.permission.mapper.domain.PToken;
+import com.face.permission.mapper.domain.PTokenDO;
 
 public interface PTokenMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(PToken record);
+    int insert(PTokenDO record);
 
-    int insertSelective(PToken record);
+    int insertSelective(PTokenDO record);
 
-    PToken selectByPrimaryKey(Long id);
+    PTokenDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(PToken record);
+    int updateByPrimaryKeySelective(PTokenDO record);
 
-    int updateByPrimaryKey(PToken record);
+    int updateByPrimaryKey(PTokenDO record);
 }

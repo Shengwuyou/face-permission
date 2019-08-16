@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.face.permission.mapper.dao.PTokenMapper">
-  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PToken">
+  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PTokenDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="u_id" jdbcType="VARCHAR" property="uId" />
     <result column="token" jdbcType="VARCHAR" property="token" />
@@ -24,7 +24,7 @@
     delete from p_token
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.face.permission.mapper.domain.PToken">
+  <insert id="insert" parameterType="com.face.permission.mapper.domain.PTokenDO">
     insert into p_token (id, u_id, token, 
       expire_time, status, create_time, 
       update_time, ext_json)
@@ -32,7 +32,7 @@
       #{expireTime,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PToken">
+  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PTokenDO">
     insert into p_token
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -87,7 +87,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PToken">
+  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PTokenDO">
     update p_token
     <set>
       <if test="uId != null">
@@ -114,7 +114,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PToken">
+  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PTokenDO">
     update p_token
     set u_id = #{uId,jdbcType=VARCHAR},
       token = #{token,jdbcType=VARCHAR},

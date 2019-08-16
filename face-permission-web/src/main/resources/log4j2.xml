@@ -112,10 +112,10 @@
             <appender-ref ref="common-error"/>
         </logger>
 
-       <!-- <Logger name="org.mybatis" level="trace" additivity="false">
+        <Logger name="org.mybatis" level="trace" additivity="false">
             <appender-ref ref="console"/>
             <appender-ref ref="common-default"/>
-        </Logger>-->
+        </Logger>
 
        <!-- <logger name="com.xiangwang.njia.dao" level="debug" additivity="false">
             <appender-ref ref="console"/>

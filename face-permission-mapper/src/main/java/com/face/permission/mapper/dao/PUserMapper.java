@@ -1,19 +1,19 @@
 package com.face.permission.mapper.dao;
 
-import com.face.permission.mapper.domain.PUser;
+import com.face.permission.mapper.domain.PUserDO;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PUserMapper {
     int deleteByPrimaryKey(Long id);
 
-    int insert(PUser record);
+    int insert(PUserDO record);
 
-    int insertSelective(PUser record);
+    int insertSelective(PUserDO record);
 
-    PUser selectByPrimaryKey(Long id);
+    PUserDO selectByPrimaryKey(Long id);
 
-    int updateByPrimaryKeySelective(PUser record);
+    int updateByPrimaryKeySelective(PUserDO record);
 
-    int updateByPrimaryKey(PUser record);
+    int updateByPrimaryKey(PUserDO record);
 }

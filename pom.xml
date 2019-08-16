@@ -34,11 +34,23 @@
         <spring-context.version>5.1.8.RELEASE</spring-context.version>
         <spring-web.version>5.1.8.RELEASE</spring-web.version>
         <spring-jdbc.version>5.0.8.RELEASE</spring-jdbc.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
     </properties>
     <dependencyManagement>
         <dependencies>
             <!--  **********  模版名  BEGIN ***********-->
             <!--  **********  模版名 END  ***********-->
+
+            <!--  **********  参数校验  BEGIN ***********-->
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${validation-api.version}</version>
+            </dependency>
+
+            <!--  **********  参数校验 END  ***********-->
+
+
 
 
             <!--  **********  spring  BEGIN ***********-->

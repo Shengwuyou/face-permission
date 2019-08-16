@@ -10,19 +10,45 @@ import java.io.Serializable;
  * @Date 2019-07-08 17:47
  */
 public class ResultInfo<T> implements Serializable {
+    /**
+     * 响应码
+     */
+    private Long code;
+    /**
+     * 响应描述
+     */
+    private String message;
+    /**
+     * 响应数据
+     */
+    private T data;
 
-    public Long code;
+    public static ResultInfo<?> success(Object data){
+        ResultInfo resultInfo = new ResultInfo(data);
+        return resultInfo;
+    }
 
-    public String message;
+    public static ResultInfo<?> error(Long code, String message, Object data){
+        ResultInfo resultInfo = new ResultInfo(code, message, data);
+        return resultInfo;
+    }
 
-    public T data;
+    public static ResultInfo<?> error(Long code, String message){
+        ResultInfo resultInfo = new ResultInfo(code, message);
+        return resultInfo;
+    }
+
+    public static ResultInfo<?> success(Long code, String message){
+        ResultInfo resultInfo = new ResultInfo(code, message);
+        return resultInfo;
+    }
 
     /**
      * 请求成功，不含data的构造函数
      */
     public ResultInfo() {
-        this.code = ReturnConstant.successCode;
-        this.message = ReturnConstant.successMsg;
+        this.code = ReturnConstant.SUCCESS_CODE;
+        this.message = ReturnConstant.SUCCESS_MSG;
         this.data = null;
     }
 
@@ -31,8 +57,8 @@ public class ResultInfo<T> implements Serializable {
      * @param data
      */
     public ResultInfo(T data) {
-        this.code = ReturnConstant.successCode;
-        this.message = ReturnConstant.successMsg;
+        this.code = ReturnConstant.SUCCESS_CODE;
+        this.message = ReturnConstant.SUCCESS_MSG;
         this.data = data;
     }
 

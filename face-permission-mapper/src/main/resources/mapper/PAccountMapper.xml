@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.face.permission.mapper.dao.PAccountMapper">
-  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PAccount">
+  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PAccountDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="u_id" jdbcType="VARCHAR" property="uId" />
     <result column="login_name" jdbcType="VARCHAR" property="loginName" />
@@ -28,7 +28,7 @@
     delete from p_account
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.face.permission.mapper.domain.PAccount">
+  <insert id="insert" parameterType="com.face.permission.mapper.domain.PAccountDO">
     insert into p_account (id, u_id, login_name, 
       password, grade, type, 
       role, status, create_time, 
@@ -38,7 +38,7 @@
       #{role,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PAccount">
+  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PAccountDO">
     insert into p_account
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -111,7 +111,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PAccount">
+  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PAccountDO">
     update p_account
     <set>
       <if test="uId != null">
@@ -147,7 +147,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PAccount">
+  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PAccountDO">
     update p_account
     set u_id = #{uId,jdbcType=VARCHAR},
       login_name = #{loginName,jdbcType=VARCHAR},

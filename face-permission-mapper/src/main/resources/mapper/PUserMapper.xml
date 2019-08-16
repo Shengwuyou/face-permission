@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.face.permission.mapper.dao.PUserMapper">
-  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PUser">
+  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PUserDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="u_id" jdbcType="VARCHAR" property="uId" />
     <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
@@ -28,17 +28,21 @@
     delete from p_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.face.permission.mapper.domain.PUser">
-    insert into p_user (id, u_id, nick_name, 
+
+  <insert id="insert" parameterType="com.face.permission.mapper.domain.PUserDO">
+    <selectKey  keyColumn="id" keyProperty="id" resultType="java.lang.Long" order="AFTER" >
+      SELECT LAST_INSERT_ID();
+    </selectKey>
+    insert into p_user (u_id, nick_name,
       mobile_phone, email, head_pic, 
       sex, status, create_time, 
       update_time, ext_json)
-    values (#{id,jdbcType=BIGINT}, #{uId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+    values (#{uId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
       #{mobilePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{headPic,jdbcType=VARCHAR}, 
       #{sex,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PUser">
+  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PUserDO">
     insert into p_user
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -111,7 +115,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PUser">
+  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PUserDO">
     update p_user
     <set>
       <if test="uId != null">
@@ -147,7 +151,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PUser">
+  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PUserDO">
     update p_user
     set u_id = #{uId,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},

@@ -1,7 +1,7 @@
 package com.face.permission.service.impl;
 
 import com.face.permission.mapper.dao.PUserMapper;
-import com.face.permission.mapper.domain.PUser;
+import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.service.interfaces.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,7 @@ public class TestServiceImpl implements ITestService {
 
     @Override
     public String test() {
-        PUser pUser = new PUser();
+        PUserDO pUser = new PUserDO();
         pUser.setuId("snowFlowers");
         pUser.setNickName("mickey");
         pUser.setEmail("987171135@qq.com");

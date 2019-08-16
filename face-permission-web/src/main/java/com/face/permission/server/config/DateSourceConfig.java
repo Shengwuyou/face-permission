@@ -37,7 +37,7 @@ public class DateSourceConfig implements EnvironmentAware {
 
 
 
-    //数据库管理工具的操作步骤：
+    //======> 数据库管理工具的操作步骤 <============
     // 1 创建数据源 dataSource
     // 2 sqlSessionFactory，每次请求获取一个sqlsession
 
