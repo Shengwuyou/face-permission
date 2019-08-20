@@ -24,6 +24,32 @@
     from p_user
     where id = #{id,jdbcType=BIGINT}
   </select>
+    <select id="selectByLoginType" parameterType="com.face.permission.mapper.dto.request.UserLoginDTO"
+            resultType="com.face.permission.mapper.domain.PUserDO">
+      select
+      <include refid="Base_Column_List"/>
+      from p_user
+      <where>
+        <choose>
+          <when test="type == 1">
+            mobile_phone = #{mobilePhone}
+          </when>
+          <when test="type == 2">
+            email = #{email}
+          </when>
+          <otherwise>
+            id = 0
+          </otherwise>
+        </choose>
+      </where>
+    </select>
+  <select id="selectByUID" resultType="com.face.permission.mapper.domain.PUserDO">
+    select <include refid="Base_Column_List"/>
+    from p_user
+    where u_id = #{uId}
+  </select>
+
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from p_user
     where id = #{id,jdbcType=BIGINT}

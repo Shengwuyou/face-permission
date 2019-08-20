@@ -6,7 +6,12 @@ import org.bouncycastle.util.encoders.Base64;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -15,7 +20,7 @@ import java.util.Map;
  * @Date 2019-08-01 19:23
  */
 public class JwtUtils {
-    private static String JWT_SECERT = "face_permission";
+    private static String JWT_SECERT = "YiZhongXu";
 
     private static String ISSUER = "root";
 
@@ -26,12 +31,15 @@ public class JwtUtils {
     private static String JWT_UNKONW_ERROR = "其它错误！";
 
     public static String TOKEN_ILLEGAL_MSG = "token异常";
-
+    /**
+     * 5分钟过期
+     */
+    public static Long DEFAULT_TOKEN_EXPIRE_TIME =  300 * 1000L ;
 
     /**
      * 签发JWT    ----- 针对无法进行手动失效token的问题，通过版本控制
      * （分布式系统在redis中存储一个短期token[userId，jti：版本号]）
-     * @param id   编号
+     * @param versionId   编号-版本控制
      * @param claims map 目标用户信息数据
      * @param ttlMillis 多长时间过期
      *
@@ -48,13 +56,13 @@ public class JwtUtils {
      * @return  String
      *
      */
-    public static String createJWT(String id, Map<String, Object> claims, long ttlMillis) {
+    public static String createJWT(Integer versionId, Map<String, Object> claims, long ttlMillis) {
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
         SecretKey secretKey = generalKey();
         JwtBuilder builder = Jwts.builder()
-                .setId(id)
+                .setId(versionId.toString())
                 .setClaims(claims)
                 .setIssuer(ISSUER)     // 签发者
                 .setIssuedAt(now)      // 签发时间
@@ -76,6 +84,9 @@ public class JwtUtils {
         Claims claims = null;
         try {
             claims = parseJWT(jwtStr);
+            //1.查询redis 查询token的版本
+            //claims.getId()
+            //2.token超时前3分钟重新生成
             checkResult.setCheck(true);
             checkResult.setClaims(claims);
         } catch (ExpiredJwtException e) {
@@ -112,5 +123,44 @@ public class JwtUtils {
                 .getBody();
     }
 
+
+    public static Object mapToObject(Map<String, Object> map, Class<?> beanClass) throws Exception {
+        if (map == null)
+            return null;
+
+        Object obj = beanClass.newInstance();
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            Method setter = property.getWriteMethod();
+            if (setter != null) {
+                setter.invoke(obj, map.get(property.getName()));
+            }
+        }
+
+        return obj;
+    }
+
+    public static Map<String, Object> objectToMap(Object obj) throws Exception {
+        if(obj == null)
+            return null;
+
+        Map<String, Object> map = new HashMap<>();
+
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            String key = property.getName();
+            if (key.compareToIgnoreCase("class") == 0) {
+                continue;
+            }
+            Method getter = property.getReadMethod();
+            Object value = getter!=null ? getter.invoke(obj) : null;
+            map.put(key, value);
+        }
+
+        return map;
+    }
 
 }

@@ -13,6 +13,8 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoginIntercept {
+
     //是否需要登陆，默认为需要
     boolean require() default true;
+
 }

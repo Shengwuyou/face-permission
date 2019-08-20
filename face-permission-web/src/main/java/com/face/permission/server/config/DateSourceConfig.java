@@ -59,6 +59,7 @@ public class DateSourceConfig implements EnvironmentAware {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource());
         PathMatchingResourcePatternResolver matchingResourcePatternResolver = new PathMatchingResourcePatternResolver();
+        sqlSessionFactoryBean.setConfigLocation(matchingResourcePatternResolver.getResource("classpath:mybatis-config.xml"));
 
         Resource[] resources = null;
         try {

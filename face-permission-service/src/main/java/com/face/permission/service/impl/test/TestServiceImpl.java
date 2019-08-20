@@ -6,6 +6,7 @@ import com.face.permission.service.interfaces.test.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -26,9 +27,9 @@ public class TestServiceImpl implements ITestService {
         pUser.setNickName("mickey");
         pUser.setEmail("987171135@qq.com");
         pUser.setMobilePhone("10000000000");
-        pUser.setSex((byte) 1);
-        pUser.setStatus((byte) 1);
-        pUser.setCreateTime(new Date());
+        pUser.setSex( 1);
+        pUser.setStatus(1);
+        pUser.setCreateTime(LocalDateTime.now());
         int i = userMapper.insert(pUser);
         System.out.println(
                 i>0?pUser.getId():0

@@ -8,14 +8,14 @@
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="grade" jdbcType="TINYINT" property="grade" />
     <result column="type" jdbcType="TINYINT" property="type" />
-    <result column="role" jdbcType="TINYINT" property="role" />
+    <result column="roles" jdbcType="VARCHAR" property="roles" />
     <result column="status" jdbcType="TINYINT" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="ext_json" jdbcType="VARCHAR" property="extJson" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, u_id, login_name, password, grade, type, role, status, create_time, update_time, 
+    id, u_id, login_name, password, grade, type, roles, status, create_time, update_time,
     ext_json
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -24,18 +24,38 @@
     from p_account
     where id = #{id,jdbcType=BIGINT}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+
+    <select id="selectByUserId" resultType="com.face.permission.mapper.domain.PAccountDO">
+      select
+      <include refid="Base_Column_List"/>
+      from p_account
+      <where>
+        password = #{password}
+        <if test="uId != null and uid != ''">
+          and u_id = #{uId}
+        </if>
+        <if test="loginName != null and loginName != ''">
+          and login_name = #{loginName}
+        </if>
+      </where>
+
+    </select>
+
+
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from p_account
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.face.permission.mapper.domain.PAccountDO">
     insert into p_account (id, u_id, login_name, 
       password, grade, type, 
-      role, status, create_time, 
+      roles, status, create_time,
       update_time, ext_json)
     values (#{id,jdbcType=BIGINT}, #{uId,jdbcType=VARCHAR}, #{loginName,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{grade,jdbcType=TINYINT}, #{type,jdbcType=TINYINT}, 
-      #{role,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{roles,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
       #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PAccountDO">
@@ -59,8 +79,8 @@
       <if test="type != null">
         type,
       </if>
-      <if test="role != null">
-        role,
+      <if test="roles != null">
+        roles,
       </if>
       <if test="status != null">
         status,
@@ -94,8 +114,8 @@
       <if test="type != null">
         #{type,jdbcType=TINYINT},
       </if>
-      <if test="role != null">
-        #{role,jdbcType=TINYINT},
+      <if test="roles != null">
+        #{roles,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=TINYINT},
@@ -129,8 +149,8 @@
       <if test="type != null">
         type = #{type,jdbcType=TINYINT},
       </if>
-      <if test="role != null">
-        role = #{role,jdbcType=TINYINT},
+      <if test="roles != null">
+        roles = #{roles,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=TINYINT},
@@ -154,7 +174,7 @@
       password = #{password,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=TINYINT},
       type = #{type,jdbcType=TINYINT},
-      role = #{role,jdbcType=TINYINT},
+      roles = #{roles,jdbcType=VARCHAR},
       status = #{status,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},

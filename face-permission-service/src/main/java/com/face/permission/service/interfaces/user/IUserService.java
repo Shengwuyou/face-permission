@@ -2,6 +2,7 @@ package com.face.permission.service.interfaces.user;
 
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.mapper.dto.request.UserLoginDTO;
 
 /**
  * @Description
@@ -23,4 +24,11 @@ public interface IUserService {
      * @return
      */
     TokenDTO cmsRegister(UserRequest request);
+
+    /**
+     * 登陆
+     * @param request
+     * @return
+     */
+    TokenDTO login(UserLoginDTO request);
 }

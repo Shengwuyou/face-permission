@@ -26,15 +26,26 @@
     </modules>
 
     <properties>
-        <mysql.version>5.1.32</mysql.version>
+        <mysql.version>6.0.6</mysql.version>
+        <druid.version>1.1.19</druid.version>
+
         <mybatis-generator.version>1.3.2</mybatis-generator.version>
-        <mybatis.version>3.2.7</mybatis.version>
-        <druid.version>1.1.2</druid.version>
-        <mybatis-spring.version>1.2.2</mybatis-spring.version>
+        <mybatis.version>3.5.1</mybatis.version>
+        <mybatis-spring.version>2.0.1</mybatis-spring.version>
+        <mybatis-typeHandler.version>1.0.2</mybatis-typeHandler.version>
+
         <spring-context.version>5.1.8.RELEASE</spring-context.version>
         <spring-web.version>5.1.8.RELEASE</spring-web.version>
         <spring-jdbc.version>5.0.8.RELEASE</spring-jdbc.version>
+
+
+        <jedis-version>2.1.6.RELEASE</jedis-version>
+
+        <spring-swagger.version>2.9.2</spring-swagger.version>
+        <swagger-version>1.5.21</swagger-version>
+
         <validation-api.version>2.0.1.Final</validation-api.version>
+        <lombok-version>1.18.8</lombok-version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -47,7 +58,11 @@
                 <artifactId>validation-api</artifactId>
                 <version>${validation-api.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok-version}</version>
+            </dependency>
             <!--  **********  参数校验 END  ***********-->
 
 
@@ -71,8 +86,28 @@
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring-jdbc.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${spring-swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${spring-swagger.version}</version>
+            </dependency>
             <!--  **********  spring END  ***********-->
 
+            <!--  **********  swagger-api文档  BEGIN ***********-->
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-version}</version>
+                <scope>compile</scope>
+            </dependency>
+
+            <!--  **********  swagger-api文档 END  ***********-->
 
 
             <!--  **********  数据库相关  BEGIN ***********-->
@@ -105,8 +140,21 @@
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
-
+            <!-- mybatis数据库字段类型映射，此处是重点 -->
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis-typehandlers-jsr310</artifactId>
+                <version>${mybatis-typeHandler.version}</version>
+            </dependency>
             <!--  **********  数据库相关 END  ***********-->
+
+            <!--  **********  redis  BEGIN ***********-->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-data-redis</artifactId>
+                    <version>${jedis-version}</version>
+                </dependency>
+            <!--  **********  redis  END  ***********-->
 
         </dependencies>
 

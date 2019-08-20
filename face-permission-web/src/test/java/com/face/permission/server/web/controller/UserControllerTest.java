@@ -38,20 +38,20 @@ public class UserControllerTest{
     public void register() throws Exception {
         UserRequest registerRequest = new UserRequest();
         registerRequest.setParentUserId(null);
-        registerRequest.setNickName("Chengjiaojiao");
-        registerRequest.setMobilePhone("12345678901");
-        registerRequest.setEmail("1@163.com");
+        registerRequest.setNickName("root管理员");
+        registerRequest.setMobilePhone("18368095211");
+        registerRequest.setEmail("987171135@qq.com");
         registerRequest.setHeadPic(null);
-        registerRequest.setSex(null);
-        registerRequest.setStatus("1");
-//        registerRequest.setLoginName("Admin123");
+        registerRequest.setSex(0);
+        registerRequest.setStatus(1);
+        registerRequest.setLoginName("root");
         registerRequest.setPassword("Admin123");
-        registerRequest.setGrade(null);
-        registerRequest.setType("1");
+        registerRequest.setGrade(0);
+        registerRequest.setType(1);
         registerRequest.setRole(null);
 
         MvcResult result = this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/register")
+                MockMvcRequestBuilders.post("/user/selfRegister")
                             .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(JSONObject.toJSONString(registerRequest))
                             )
@@ -82,6 +82,7 @@ public class UserControllerTest{
         MockHttpServletResponse response =  result.getResponse();
         System.out.println(response.getContentAsString());
     }
+
     @Test
     public void updateUserInfo() throws Exception {
 

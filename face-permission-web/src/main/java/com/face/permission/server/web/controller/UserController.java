@@ -6,6 +6,7 @@ import com.face.permission.api.model.request.valids.groups.CreateGroup;
 import com.face.permission.api.model.request.valids.groups.RetrieveGroup;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.responses.ResultInfo;
+import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
 import com.face.permission.service.interfaces.user.IUserService;
@@ -43,19 +44,12 @@ public class UserController {
 
     @RequestMapping(value = "cmsRegister" ,method = RequestMethod.POST)
     @ResponseBody
-    @LoginIntercept(require = true)
+    @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> cmsRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
-        UserInfo userInfo = ThreadLocalUser.getUserInfo();
-        BeanUtils.copyProperties(userInfo, request);
         TokenDTO token = userService.cmsRegister(request);
         return ResultInfo.success(token);
     }
-
-
-
-
-
 
 
     @RequestMapping(value = "login" ,method = RequestMethod.POST)
@@ -63,7 +57,9 @@ public class UserController {
     @LoginIntercept(require = false)
     //TODO AOP加操作日志
     public ResultInfo<?> login(@Validated(value = {RetrieveGroup.class})  @RequestBody UserRequest request){
-        String token = "ok";
+        UserLoginDTO loginDTO = new UserLoginDTO();
+        BeanUtils.copyProperties(request, loginDTO);
+        TokenDTO token = userService.login(loginDTO);
         return ResultInfo.success(token);
     }
 

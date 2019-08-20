@@ -1,4 +1,4 @@
-package com.face.permission.service.impl.user;
+package com.face.permission.service.template;
 
 import com.face.permission.api.model.request.user.UserRequest;
 
@@ -27,17 +27,17 @@ public abstract class RegisterTemplate {
      * 参数校验
      * @return
      */
-    abstract void checkParam(UserRequest request);
+    public abstract void checkParam(UserRequest request);
 
     /**
      * 信息入库
      */
-    abstract void dataStorage(UserRequest request);
+    public abstract void dataStorage(UserRequest request);
 
     /**
      * 分配请求认证令牌
      * @return
      */
-    abstract String createToken(UserRequest request);
+    public abstract String createToken(UserRequest request);
 
 }
