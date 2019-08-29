@@ -164,7 +164,8 @@ public class SnowFlakeGenerator {
     }
 
     private static Long getDataCenterId(){
-        int[] ints = StringUtils.toCodePoints(SystemUtils.getHostName());
+//        int[] ints = StringUtils.toCodePoints(SystemUtils.getHostName());
+        int[] ints = StringUtils.toCodePoints(IpUtil.getIpAddress());
         int sums = 0;
         for (int i: ints) {
             sums += i;

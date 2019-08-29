@@ -2,8 +2,12 @@ package com.face.permission.mapper.dao;
 
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
+import com.face.permission.mapper.query.user.UserQuery;
+import com.face.permission.mapper.vo.user.UserInfoVo;
 import org.springframework.stereotype.Repository;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 @Repository
 public interface PUserMapper {
@@ -33,4 +37,10 @@ public interface PUserMapper {
      * @return
      */
     PUserDO selectByUID(String uId);
+
+    Integer selectUserTotal(UserQuery query);
+
+    List<UserInfoVo> selectUsers(UserQuery query);
+
+    List<PUserDO> selectRegisterUsers(@Param(value = "mobile") String mobile, @Param(value = "email") String email);
 }

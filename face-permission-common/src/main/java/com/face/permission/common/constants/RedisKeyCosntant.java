@@ -7,9 +7,18 @@ package com.face.permission.common.constants;
  */
 public interface RedisKeyCosntant {
 
-    //user_info_%s (自定义userId)-用户信息缓存
+    /**
+     * user_info_%s (自定义userId)-用户信息缓存
+     */
     String USER_INFO_KEY = "user_info_";
 
-    //user_account_%s (自定义userId)-用户账号缓存
+    /**
+     * user_account_%s (自定义userId)-用户账号缓存
+     */
     String USER_ACCOUNT_KEY = "user_account_";
+
+    /**
+     * 用户注册锁，防止重复注册，以手机号为重复拦截条件
+     */
+    String REGISTER_LOCK_KEY = "u_register_";
 }

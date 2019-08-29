@@ -12,13 +12,12 @@ import com.face.permission.mapper.dao.PUserMapper;
 import com.face.permission.mapper.domain.PAccountDO;
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.service.template.RegisterTemplate;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.face.permission.common.constants.enums.user.UserErrorEnum.*;
 import static com.face.permission.common.constants.enums.user.UserErrorEnum.USER_ACCCOUNT_STORAGE_ERROR;
@@ -48,6 +47,16 @@ public class CmsUserRegisterServiceImpl extends RegisterTemplate {
         Integer[] roles = request.getRoles();
         AssertUtil.isTrue(Arrays.stream(roles).anyMatch(role -> role == RoleEnum.ROOT_ROLE.getCode())
                 , NO_ROLE.getCode(), NO_ROLE.getMsg());
+
+        //3.检查注册用户的手机号/邮箱/loginName 是否已经注册
+        List<PUserDO> userDOS = userMapper.selectRegisterUsers(request.getMobilePhone(), request.getEmail());
+        if (userDOS.size() > 0){
+            PUserDO userDO = userDOS.get(0);
+            AssertUtil.isTrue(!Objects.equals(userDO.getMobilePhone(), request.getMobilePhone()), "手机号已经被注册！");
+            AssertUtil.isTrue(userDO.getEmail() != null && !Objects.equals(userDO.getEmail(), request.getEmail()), "邮箱已经被注册！");
+        }
+        PAccountDO accountDO = accountMapper.selectByUserId(null,request.getLoginName(), null);
+        AssertUtil.isNull(accountDO, "登陆账号已经被注册!");
     }
 
     @Override
@@ -75,6 +84,7 @@ public class CmsUserRegisterServiceImpl extends RegisterTemplate {
         accountDO.setGrade(0);
         accountDO.setType(request.getType());
         accountDO.setStatus(1);
+        accountDO.setRoles(ConvertUtils.convert(request.getRole()));
         accountDO.setCreateTime(LocalDateTime.now());
         accountDO.setUpdateTime(LocalDateTime.now());
         AssertUtil.isTrue(accountMapper.insertSelective(accountDO) > 0, USER_ACCCOUNT_STORAGE_ERROR.getMsg());
@@ -84,7 +94,7 @@ public class CmsUserRegisterServiceImpl extends RegisterTemplate {
 
     @Override
     public String createToken(UserRequest request) {
-        Map<String,Object> claims = new HashMap<>();
+        Map<String, Object> claims = new HashMap<>();
         claims.put("uid", request.getUid());
         claims.put("roles", request.getRole());
 

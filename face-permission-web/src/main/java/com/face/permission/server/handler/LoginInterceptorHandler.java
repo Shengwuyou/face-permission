@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,7 @@ import java.lang.reflect.Method;
 
 import static com.face.permission.common.constants.enums.SystemErrorEnum.UNKONW_HTTP_REQUEST;
 import static com.face.permission.server.config.ThreadLocalUser.checkToken;
+import static com.face.permission.server.config.ThreadLocalUser.checkTrace;
 
 /**
  * @Description
@@ -48,7 +50,11 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
         LoginIntercept loginIntercept = method.getAnnotation(LoginIntercept.class);
         if (loginIntercept != null && loginIntercept.require()){
             checkToken(token);
+
+            String trace = request.getHeader("trace");
+            checkTrace(trace);
         }
+
         //3.拦截器前置判断通过，进入
         return true;
     }

@@ -1,6 +1,13 @@
 package com.face.permission.service.template;
 
 import com.face.permission.api.model.request.user.UserRequest;
+import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.common.exceptions.FaceServiceException;
+import com.face.permission.common.utils.AssertUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import static com.face.permission.common.constants.RedisKeyCosntant.REGISTER_LOCK_KEY;
+import static com.face.permission.common.constants.enums.SystemErrorEnum.ASSERT_ERROR_CODE;
 
 /**
  * @Description
@@ -9,18 +16,27 @@ import com.face.permission.api.model.request.user.UserRequest;
  */
 public abstract class RegisterTemplate {
 
-    public String register(UserRequest request){
-        String key = "u_register_"+ "mobile/XXXX";
-        //lock
 
-        //1.检查参数 checkParam
-        checkParam(request);
-        //2.信息入库
-        dataStorage(request);
-        //3.token创建，redis缓存
-        String token = createToken(request);
-        //finally   unlock
-        return token;
+    @Autowired
+    RedisSelfCacheManager redisSelfCacheManager;
+
+    public String register(UserRequest request){
+        String key = REGISTER_LOCK_KEY+ request.getMobilePhone();
+        if (redisSelfCacheManager.lock(key,  3L)){
+            try {
+                //1.检查参数 checkParam
+                checkParam(request);
+                //2.信息入库
+                dataStorage(request);
+                //3.token创建，redis缓存
+                String token = createToken(request);
+                return token;
+            } finally {
+                redisSelfCacheManager.unLock(key);
+            }
+        }else{
+            throw new FaceServiceException(ASSERT_ERROR_CODE.getCode(), "系统繁忙，请稍后重试");
+        }
     }
 
     /**

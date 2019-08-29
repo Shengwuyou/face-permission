@@ -81,10 +81,10 @@ public class MD5 {
 	}
 
 	public static void main(String[] args) throws Exception {
-
+		System.out.println(getMD5("Admin123"));
 		// System.out.println("MD5:"+DigestUtils.md5Hex("WANGQIUYUN"));
-		long currentTime = System.currentTimeMillis();
-		String timestamp = String.valueOf(currentTime / 1000);
-		System.out.println(getMD5("appKey" + "QjVDMkNBNzdCMTAyN0NBOA==" + "params" + "{\"orderCodes\":[\"260013589860174\"]}" + "timestamp" + timestamp + "userKey" + "MjBjYzAwYzgzM2FmMTlmMjYwOGVkY2FmYTI2NTI3MDc=" + "75f6bf44af374e20522503b0c76eea70" + "825998743f0d9f0ebcfef25383e4e386").toLowerCase());
+//		long currentTime = System.currentTimeMillis();
+//		String timestamp = String.valueOf(currentTime / 1000);
+//		System.out.println(getMD5("appKey" + "QjVDMkNBNzdCMTAyN0NBOA==" + "params" + "{\"orderCodes\":[\"260013589860174\"]}" + "timestamp" + timestamp + "userKey" + "MjBjYzAwYzgzM2FmMTlmMjYwOGVkY2FmYTI2NTI3MDc=" + "75f6bf44af374e20522503b0c76eea70" + "825998743f0d9f0ebcfef25383e4e386").toLowerCase());
 	}
 }

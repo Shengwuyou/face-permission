@@ -1,5 +1,6 @@
 package com.face.permission.server.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.common.constants.ReturnConstant;
 import com.face.permission.common.responses.JwtCheckResult;
@@ -23,6 +24,9 @@ public class ThreadLocalUser {
      * @param userInfo
      */
     public static void setUserInfo(UserInfo userInfo){
+        if (userInfoThreadLocal == null){
+            userInfoThreadLocal = new ThreadLocal<>();
+        }
         userInfoThreadLocal.set(userInfo);
     }
 
@@ -31,6 +35,9 @@ public class ThreadLocalUser {
      * @return
      */
     public static UserInfo getUserInfo(){
+        if (userInfoThreadLocal == null){
+            userInfoThreadLocal = new ThreadLocal<>();
+        }
         return userInfoThreadLocal.get();
     }
 
@@ -55,4 +62,16 @@ public class ThreadLocalUser {
         ThreadLocalUser.setUserInfo(userInfo);
     }
 
+    public static void checkTrace(String trace){
+        if (trace == null){
+            return;
+        }
+        JSONObject traceJs = JSONObject.parseObject(trace);
+
+        //TODO 这儿需要加入 用户token唯一性校验 和 版本失效控制校验
+        UserInfo userInfo = getUserInfo();
+        userInfo.setPlatform(traceJs.getString("platform"));
+        userInfo.setFromWay(traceJs.getInteger("fromWay"));
+        ThreadLocalUser.setUserInfo(userInfo);
+    }
 }

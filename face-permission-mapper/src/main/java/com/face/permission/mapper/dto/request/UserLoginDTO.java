@@ -16,11 +16,12 @@ public class UserLoginDTO {
 
     /**
      * 登录名 手机号/邮箱/自定义 （默认使用手机号）
+     * loginName（字母数字下划线）
      */
     private String loginName;
 
     /**
-     * 手机号
+     * 手机号 11位数字
      */
     private String mobilePhone;
     /**

@@ -3,6 +3,7 @@ package com.face.permission.api.model.request.user;
 
 import com.face.permission.api.model.request.valids.groups.CreateGroup;
 import com.face.permission.api.model.request.valids.groups.RetrieveGroup;
+import com.face.permission.api.model.request.valids.groups.UpdateGroup;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -16,27 +17,34 @@ import javax.validation.constraints.Pattern;
  * @Date 2019-07-18 15:43
  */
 @Data
-public class UserRequest extends UserInfo{
+public class UserRequest extends UserInfo {
     /**
      * 发起注册请求的用户
      */
     private String parentUserId;
+
+    /**
+     * 用户ID
+     */
+    @NotBlank(message = "userID 不能为空", groups = UpdateGroup.class)
+    private String userId;
+
     /**
      * 昵称
      */
     @NotBlank(message = "nickName 不能为空", groups = CreateGroup.class)
-    @Pattern(regexp = ".{8,20}", message = "昵称长度范围8～20", groups = CreateGroup.class)
+    @Pattern(regexp = ".{1,10}", message = "昵称长度范围1～10", groups = {CreateGroup.class, UpdateGroup.class})
     private String nickName;
     /**
      * 手机号
      */
     @NotBlank(message = "mobilePhone 不能为空", groups = CreateGroup.class)
-    @Pattern(regexp = "^1[0-9]{10}", message = "手机号格式不正确", groups = {CreateGroup.class, RetrieveGroup.class})
+    @Pattern(regexp = "^1[0-9]{10}", message = "手机号格式不正确", groups = {CreateGroup.class, RetrieveGroup.class, UpdateGroup.class})
     private String mobilePhone;
     /**
      * 邮箱
      */
-    @Email(message = "邮箱格式非法", groups = {CreateGroup.class, RetrieveGroup.class})
+    @Email(message = "邮箱格式非法", groups = {CreateGroup.class, RetrieveGroup.class, UpdateGroup.class})
     private String email;
     /**
      * 头像图片url
@@ -45,26 +53,26 @@ public class UserRequest extends UserInfo{
     /**
      * 性别
      */
-    @Pattern(regexp = "[0-2]+", message = "性别范围0，1，2", groups = CreateGroup.class)
+//    @Pattern(regexp = "[0-2]+", message = "性别范围0，1，2", groups = {CreateGroup.class, UpdateGroup.class})
     private Integer sex;
 
     /**
      * 状态(0未知/1有效 /2无效)
      */
-    @Pattern(regexp = "[0-2]+", message = "状态0，1，2", groups = CreateGroup.class)
+//    @Pattern(regexp = "[0-2]+", message = "状态0，1，2", groups = {CreateGroup.class, UpdateGroup.class})
     private Integer status;
 
     /**
      * 登录名 手机号/邮箱/自定义 （默认使用手机号）
      */
-    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "登录名需要字母数字组合 8～16位", groups = {CreateGroup.class, RetrieveGroup.class})
+    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "登录名需要字母数字组合 8～16位", groups = {CreateGroup.class, RetrieveGroup.class, UpdateGroup.class})
     private String loginName;
 
     /**
      * 密码
      */
     @NotBlank(message = "password 不能为空", groups = {CreateGroup.class, RetrieveGroup.class})
-    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "密码必须使用大小写字母和数字组合  8～16位", groups = {CreateGroup.class, RetrieveGroup.class})
+    @Pattern(regexp = "^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", message = "密码必须使用大小写字母和数字组合  8～16位", groups = {CreateGroup.class, RetrieveGroup.class, UpdateGroup.class})
     private String password;
 
     /**
@@ -75,8 +83,8 @@ public class UserRequest extends UserInfo{
     /**
      * 账户类型(0游客/1普通/2VIP/3管理员/4root)
      */
-    @NotNull(message = "type 不能为空", groups = CreateGroup.class)
-    @Pattern(regexp = "[0-4]+", message = "账户类型(0游客/1普通/2VIP/3管理员/4root)", groups = CreateGroup.class)
+//    @NotNull(message = "type 不能为空", groups = CreateGroup.class)
+//    @Pattern(regexp = "[0-4]+", message = "账户类型(0游客/1普通/2VIP/3管理员/4root)", groups = CreateGroup.class)
     private Integer type;
 
     /**
@@ -88,13 +96,13 @@ public class UserRequest extends UserInfo{
      * 第5位 登陆用户后台 操作普通用户
      * 第6位 登陆用户后台 操作所有用户
      */
-    private String role;
+    private Integer[] role;
 
+    public String getNickName() {
+        return nickName;
+    }
 
-    /**
-     * 登陆类型 0 : loginName 1 : mobile 2 : email
-     */
-    @NotNull(message = "登陆类型不能为空", groups = RetrieveGroup.class)
-    @Pattern(regexp = "[0-2]+", message = "登陆类型非法", groups = RetrieveGroup.class)
-    private Integer accountType;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
 }

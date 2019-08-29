@@ -1,186 +1,284 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.face.permission.mapper.dao.PUserMapper">
-  <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PUserDO">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="u_id" jdbcType="VARCHAR" property="uId" />
-    <result column="nick_name" jdbcType="VARCHAR" property="nickName" />
-    <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="head_pic" jdbcType="VARCHAR" property="headPic" />
-    <result column="sex" jdbcType="TINYINT" property="sex" />
-    <result column="status" jdbcType="TINYINT" property="status" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="ext_json" jdbcType="VARCHAR" property="extJson" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.face.permission.mapper.domain.PUserDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="u_id" jdbcType="VARCHAR" property="uId"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="head_pic" jdbcType="VARCHAR" property="headPic"/>
+        <result column="sex" jdbcType="TINYINT" property="sex"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="ext_json" jdbcType="VARCHAR" property="extJson"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, u_id, nick_name, mobile_phone, email, head_pic, sex, status, create_time, update_time, 
     ext_json
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from p_user
-    where id = #{id,jdbcType=BIGINT}
-  </select>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from p_user
+        where id = #{id,jdbcType=BIGINT}
+    </select>
     <select id="selectByLoginType" parameterType="com.face.permission.mapper.dto.request.UserLoginDTO"
             resultType="com.face.permission.mapper.domain.PUserDO">
-      select
-      <include refid="Base_Column_List"/>
-      from p_user
-      <where>
-        <choose>
-          <when test="type == 1">
-            mobile_phone = #{mobilePhone}
-          </when>
-          <when test="type == 2">
-            email = #{email}
-          </when>
-          <otherwise>
-            id = 0
-          </otherwise>
-        </choose>
-      </where>
+        select
+        <include refid="Base_Column_List"/>
+        from p_user
+        <where>
+            <choose>
+                <when test="type == 1">
+                    mobile_phone = #{mobilePhone}
+                </when>
+                <when test="type == 2">
+                    email = #{email}
+                </when>
+                <otherwise>
+                    id = 0
+                </otherwise>
+            </choose>
+        </where>
     </select>
-  <select id="selectByUID" resultType="com.face.permission.mapper.domain.PUserDO">
-    select <include refid="Base_Column_List"/>
-    from p_user
-    where u_id = #{uId}
-  </select>
+    <select id="selectByUID" resultType="com.face.permission.mapper.domain.PUserDO">
+        select
+        <include refid="Base_Column_List"/>
+        from p_user
+        where u_id = #{uId}
+    </select>
+    <select id="selectUserTotal" parameterType="com.face.permission.mapper.query.user.UserQuery"
+            resultType="java.lang.Integer">
+        select count(1)
+        from p_user pu
+        left join p_account pa
+        on pu.u_id = pa.u_id
+        <where>
+            <if test="uId != null">
+                and pu.u_id = #{uId}
+            </if>
+            <if test="nickName != null">
+                and pu.nick_name = #{nickName}
+            </if>
+            <if test="mobilePhone != null">
+                and pu.mobile_phone = #{mobilePhone}
+            </if>
+            <if test="email != null">
+                and pu.email = #{email}
+            </if>
+            <if test="loginName != null">
+                and pa.login_name = #{loginName}
+            </if>
+            <if test="type != null">
+                and pa.type = #{type}
+            </if>
+            <if test="startTime != null">
+                and pu.create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                and pu.create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectUsers" parameterType="com.face.permission.mapper.query.user.UserQuery"
+            resultType="com.face.permission.mapper.vo.user.UserInfoVo">
+        select
+        pu.u_id,
+        pu.nick_name,
+        pu.mobile_phone,
+        pu.sex,
+        pu.email,
+        pu.status,
+        pu.create_time,
+        pa.login_name,
+        pa.grade,
+        pa.type
+        from p_user pu
+        left join p_account pa
+        on pu.u_id = pa.u_id
+        <where>
+            <if test="uId != null">
+                pu.u_id = #{uId}
+            </if>
+            <if test="nickName != null">
+                and pu.nick_name = #{nickName}
+            </if>
+            <if test="mobilePhone != null">
+                and pu.mobile_phone = #{mobilePhone}
+            </if>
+            <if test="email != null">
+                and pu.email = #{email}
+            </if>
+            <if test="loginName != null">
+                and pa.login_name = #{loginName}
+            </if>
+            <if test="type != null">
+                and pa.type = #{type}
+            </if>
+            <if test="startTime != null">
+                and pu.create_time <![CDATA[ >= ]]> #{startTime}
+            </if>
+            <if test="endTime != null">
+                and pu.create_time <![CDATA[ <= ]]> #{endTime}
+            </if>
+        </where>
+        order by pu.id
+        <choose>
+            <when test="orderBy == 0">desc</when>
+            <otherwise>asc</otherwise>
+        </choose>
+        limit #{startRow}, #{size}
+    </select>
+
+    <select id="selectRegisterUsers" resultType="com.face.permission.mapper.domain.PUserDO">
+        select
+        <include refid="Base_Column_List"/>
+        from p_user
+        <where>
+            <if test="mobile != null">
+                mobile_phone = #{mobile}
+            </if>
+            <if test="email != null">
+                or email = #{email}
+            </if>
+        </where>
+    </select>
 
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from p_user
     where id = #{id,jdbcType=BIGINT}
   </delete>
 
-  <insert id="insert" parameterType="com.face.permission.mapper.domain.PUserDO">
-    <selectKey  keyColumn="id" keyProperty="id" resultType="java.lang.Long" order="AFTER" >
-      SELECT LAST_INSERT_ID();
-    </selectKey>
-    insert into p_user (u_id, nick_name,
-      mobile_phone, email, head_pic, 
-      sex, status, create_time, 
-      update_time, ext_json)
-    values (#{uId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
-      #{mobilePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{headPic,jdbcType=VARCHAR}, 
-      #{sex,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PUserDO">
-    <selectKey keyProperty="id" keyColumn="id" resultType="java.lang.Long" order="AFTER">
-      select LAST_INSERT_ID();
-    </selectKey>
-    insert into p_user
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="uId != null">
-        u_id,
-      </if>
-      <if test="nickName != null">
-        nick_name,
-      </if>
-      <if test="mobilePhone != null">
-        mobile_phone,
-      </if>
-      <if test="email != null">
-        email,
-      </if>
-      <if test="headPic != null">
-        head_pic,
-      </if>
-      <if test="sex != null">
-        sex,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="updateTime != null">
-        update_time,
-      </if>
-      <if test="extJson != null">
-        ext_json,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=BIGINT},
-      </if>
-      <if test="uId != null">
-        #{uId,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="mobilePhone != null">
-        #{mobilePhone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="headPic != null">
-        #{headPic,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null">
-        #{sex,jdbcType=TINYINT},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="extJson != null">
-        #{extJson,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PUserDO">
-    update p_user
-    <set>
-      <if test="uId != null">
-        u_id = #{uId,jdbcType=VARCHAR},
-      </if>
-      <if test="nickName != null">
-        nick_name = #{nickName,jdbcType=VARCHAR},
-      </if>
-      <if test="mobilePhone != null">
-        mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="headPic != null">
-        head_pic = #{headPic,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null">
-        sex = #{sex,jdbcType=TINYINT},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=TINYINT},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="extJson != null">
-        ext_json = #{extJson,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PUserDO">
+    <insert id="insert" parameterType="com.face.permission.mapper.domain.PUserDO">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Long" order="AFTER">
+            SELECT LAST_INSERT_ID();
+        </selectKey>
+        insert into p_user (u_id, nick_name,
+        mobile_phone, email, head_pic,
+        sex, status, create_time,
+        update_time, ext_json)
+        values (#{uId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
+        #{mobilePhone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{headPic,jdbcType=VARCHAR},
+        #{sex,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{extJson,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.face.permission.mapper.domain.PUserDO">
+        <selectKey keyProperty="id" keyColumn="id" resultType="java.lang.Long" order="AFTER">
+            select LAST_INSERT_ID();
+        </selectKey>
+        insert into p_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="uId != null">
+                u_id,
+            </if>
+            <if test="nickName != null">
+                nick_name,
+            </if>
+            <if test="mobilePhone != null">
+                mobile_phone,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="headPic != null">
+                head_pic,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="extJson != null">
+                ext_json,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="uId != null">
+                #{uId,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobilePhone != null">
+                #{mobilePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="headPic != null">
+                #{headPic,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="extJson != null">
+                #{extJson,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PUserDO">
+        update p_user
+        <set>
+            <if test="uId != null">
+                u_id = #{uId,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName != null">
+                nick_name = #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="mobilePhone != null">
+                mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="headPic != null">
+                head_pic = #{headPic,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="extJson != null">
+                ext_json = #{extJson,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PUserDO">
     update p_user
     set u_id = #{uId,jdbcType=VARCHAR},
       nick_name = #{nickName,jdbcType=VARCHAR},

@@ -30,7 +30,9 @@
       <include refid="Base_Column_List"/>
       from p_account
       <where>
-        password = #{password}
+        <if test="password != null and password != ''">
+          and password = #{password}
+        </if>
         <if test="uId != null and uid != ''">
           and u_id = #{uId}
         </if>

@@ -14,6 +14,7 @@ public class FaceServiceException extends RuntimeException implements Serializab
     private ResultInfo<Object> result;
 
     public FaceServiceException(Long code, String message) {
+        super(message);
         this.result = new ResultInfo<>(code,message);
     }
 

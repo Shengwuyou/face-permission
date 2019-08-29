@@ -2,6 +2,9 @@ package com.face.permission.common.responses;
 
 import io.jsonwebtoken.Claims;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @Description
  * @Author xuyizhong
@@ -9,7 +12,7 @@ import io.jsonwebtoken.Claims;
  */
 public class JwtCheckResult {
     /**
-     *  token校验结果 true / false
+     * token校验结果 true / false
      */
     private boolean check;
     /**
@@ -50,7 +53,15 @@ public class JwtCheckResult {
     }
 
     public Integer[] getRoles() {
-        roles = claims.get("roles", Integer[].class);
+        Object roleObj = claims.get("roles");
+        if (roleObj instanceof List) {
+            roles = new Integer[((List) roleObj).size()];
+            for (int i = 0; i < ((List) roleObj).size(); i++) {
+                roles[i] = (Integer) ((List) roleObj).get(i);
+            }
+        }if (roleObj instanceof Integer[]){
+            return (Integer[]) roleObj;
+        }
         return roles;
     }
 

@@ -11,8 +11,6 @@ import lombok.Getter;
 
 public class UserEnums {
 
-    @Getter
-    @AllArgsConstructor
     public enum UserFromWay{
         FROM_CMS(0, "cms后台"),
         FROM_CLIENT(1, "用户端");
@@ -20,12 +18,30 @@ public class UserEnums {
         private Integer code;
         private String msg;
 
+        UserFromWay(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
     }
 
 
 
-    @Getter
-    @AllArgsConstructor
     public enum UserStatus{
         UNKONW(0, "未知状态"),
         AVAILABLE(1, "有效"),
@@ -34,11 +50,29 @@ public class UserEnums {
         private Integer code;
         private String msg;
 
+        UserStatus(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
     }
 
 
-    @Getter
-    @AllArgsConstructor
     public enum LoginTypeEnum{
         LOGIN_NAME(0, "用户名登陆"),
         MOBILE(1, "手机号登陆"),
@@ -47,6 +81,26 @@ public class UserEnums {
         private Integer code;
         private String msg;
 
+        LoginTypeEnum(Integer code, String msg) {
+            this.code = code;
+            this.msg = msg;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
     }
 
 }

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.face.permission.common.constants.ReturnConstant;
 import com.face.permission.common.constants.enums.SystemErrorEnum;
 import com.face.permission.common.constants.enums.user.UserErrorEnum;
+import com.face.permission.common.exceptions.FaceServiceException;
 import com.face.permission.common.responses.ResultInfo;
 import com.face.permission.common.utils.LoggerUtil;
 import org.apache.logging.log4j.Logger;
@@ -54,12 +55,17 @@ public class PermissionExceptionHandler {
 
     //===================【断言异常处理器】========================
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResultInfo<?> IllegalArgumentException(IllegalArgumentException e) {
+    public ResultInfo<?> illegalArgumentException(IllegalArgumentException e) {
         logger.error(e.getMessage(), e);
         return ResultInfo.error(SystemErrorEnum.ASSERT_ERROR_CODE.getCode(), e.getMessage());
     }
 
-
+    //===================【断言异常处理器】========================
+    @ExceptionHandler(value = {FaceServiceException.class})
+    public ResultInfo<?> faceServiceException(FaceServiceException e) {
+        logger.error(e);
+        return ResultInfo.error(ReturnConstant.UNKNOW_ERROR, e.getMessage());
+    }
 
 
     //===================【未知异常处理器】========================

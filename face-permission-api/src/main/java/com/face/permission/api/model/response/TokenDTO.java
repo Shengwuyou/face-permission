@@ -9,7 +9,11 @@ public class TokenDTO {
     /**
      * 请求令牌
      */
-    String token;
+    private String token;
+    /**
+     * 用户昵称
+     */
+    private String nickName;
 
     public String getToken() {
         return token;
@@ -17,6 +21,15 @@ public class TokenDTO {
 
     public TokenDTO setToken(String token) {
         this.token = token;
+        return this;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public TokenDTO setNickName(String nickName) {
+        this.nickName = nickName;
         return this;
     }
 }

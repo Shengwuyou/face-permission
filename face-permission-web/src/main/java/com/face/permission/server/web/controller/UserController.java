@@ -4,21 +4,25 @@ import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.request.valids.groups.CreateGroup;
 import com.face.permission.api.model.request.valids.groups.RetrieveGroup;
+import com.face.permission.api.model.request.valids.groups.UpdateGroup;
 import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.common.responses.PaginatedResultData;
 import com.face.permission.common.responses.ResultInfo;
+import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
+import com.face.permission.mapper.query.user.UserQuery;
+import com.face.permission.mapper.vo.user.UserInfoVo;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
 import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.Assert;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.*;
-import javax.websocket.server.PathParam;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Description
@@ -47,6 +51,11 @@ public class UserController {
     @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> cmsRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
+        UserInfo userInfo = ThreadLocalUser.getUserInfo();
+        request.setPlatform(userInfo.getPlatform());
+        request.setFromWay(userInfo.getFromWay());
+        request.setRoles(userInfo.getRoles());
+        request.setUid(userInfo.getUid());
         TokenDTO token = userService.cmsRegister(request);
         return ResultInfo.success(token);
     }
@@ -56,24 +65,30 @@ public class UserController {
     @ResponseBody
     @LoginIntercept(require = false)
     //TODO AOP加操作日志
-    public ResultInfo<?> login(@Validated(value = {RetrieveGroup.class})  @RequestBody UserRequest request){
-        UserLoginDTO loginDTO = new UserLoginDTO();
-        BeanUtils.copyProperties(request, loginDTO);
-        TokenDTO token = userService.login(loginDTO);
+    public ResultInfo<?> login(@Validated(value = {RetrieveGroup.class})  @RequestBody UserLoginDTO request){
+        TokenDTO token = userService.login(request);
         return ResultInfo.success(token);
     }
 
-    @RequestMapping(value = "update" ,method = RequestMethod.GET)
+    @RequestMapping(value = "update" ,method = RequestMethod.POST)
     @ResponseBody
     //TODO AOP加操作日志
-    public ResultInfo<?> updateUserInfo(@NotBlank(message = "姓名不能为空")
-                                        @Pattern(regexp = "^.{2,12}", message = "姓名格式不规范")
-                                        @PathParam("name") String name,
-                                        @Min(value = 14, message = "年龄须大于14")
-                                        @Max(value = 99 , message = "年龄须小于99")
-                                        @PathParam("age") Integer age){
-        Assert.isTrue(true, "我感觉你是错的，哈哈哈"+ name + age);
-        String token = "ok";
-        return ResultInfo.success(token);
+    public ResultInfo<?> updateUserInfo(@Validated(value = {UpdateGroup.class})  @RequestBody UserRequest request){
+        Boolean result = userService.update(request);
+        return ResultInfo.success(result);
+    }
+
+
+    @RequestMapping(value = "queryUsers" ,method = RequestMethod.POST)
+    @ResponseBody
+    //TODO AOP加操作日志  @Validated(value = {UpdateGroup.class})
+    public ResultInfo<PaginatedResultData<UserInfoVo>> queryUsers(@RequestBody UserQuery query){
+
+        Integer total = userService.getTotal(query);
+        List<UserInfoVo> resultList = new ArrayList();
+        if (total > 0) {
+            resultList = userService.getList(query);
+        }
+        return ResultInfo.buildPaginatedResult(query, resultList, total);
     }
 }

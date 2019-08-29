@@ -2,7 +2,12 @@ package com.face.permission.service.interfaces.user;
 
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
+import com.face.permission.mapper.query.user.UserQuery;
+import com.face.permission.mapper.vo.user.UserInfoVo;
+
+import java.util.List;
 
 /**
  * @Description
@@ -31,4 +36,16 @@ public interface IUserService {
      * @return
      */
     TokenDTO login(UserLoginDTO request);
+
+    /**
+     * 更新用户信息
+     * @param request
+     * @return
+     */
+    boolean update(UserRequest request);
+
+
+    Integer getTotal(UserQuery query);
+
+    List<UserInfoVo> getList(UserQuery query);
 }

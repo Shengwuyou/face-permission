@@ -11,6 +11,10 @@ import static com.face.permission.common.constants.enums.SystemErrorEnum.ASSERT_
  */
 public class AssertUtil {
 
+    public static void error( Long code, String message){
+        throw new FaceServiceException(code, message);
+    }
+
     public static void state(boolean expression, Long code, String message){
         if (!expression){
             throw new FaceServiceException(code, message);
@@ -33,6 +37,11 @@ public class AssertUtil {
         if (object == null){
             throw new FaceServiceException(code, message);
         }
+    }
+
+
+    public static void error( String message){
+        throw new FaceServiceException(ASSERT_ERROR_CODE.getCode(), message);
     }
 
     public static void state(boolean expression, String message){
