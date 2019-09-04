@@ -3,21 +3,26 @@ package com.face.permission.common.constants.enums.role;
 /**
  * @Description
  * @Author xuyizhong
- * @Date 2019-08-16 10:36
+ * @Date 2019-08-31 18:06
  */
-public enum RoleEnum {
-    ROOT_ROLE(1, "管理员权限");
+public enum RoleTypeEnum {
+    UNKONW(0, "未知操作"),
+    ADD(1, "新增"),
+    DELETE(2, "删除"),
+    UPDATE(3, "更新"),
+    QUERY(4, "查询")
+    ;
 
     /**
-     * 权限code
+     *
      */
     private Integer code;
     /**
-     * 权限描述
+     * 描述
      */
     private String msg;
 
-    RoleEnum(Integer code, String msg) {
+    RoleTypeEnum(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }

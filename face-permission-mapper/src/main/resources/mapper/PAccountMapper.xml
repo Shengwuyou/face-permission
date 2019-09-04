@@ -136,9 +136,6 @@
   <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PAccountDO">
     update p_account
     <set>
-      <if test="uId != null">
-        u_id = #{uId,jdbcType=VARCHAR},
-      </if>
       <if test="loginName != null">
         login_name = #{loginName,jdbcType=VARCHAR},
       </if>
@@ -167,7 +164,7 @@
         ext_json = #{extJson,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=BIGINT}
+    where u_id = #{uId,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PAccountDO">
     update p_account

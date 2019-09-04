@@ -8,14 +8,12 @@ import com.face.permission.api.model.request.valids.groups.UpdateGroup;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.responses.PaginatedResultData;
 import com.face.permission.common.responses.ResultInfo;
-import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
 import com.face.permission.service.interfaces.user.IUserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
@@ -52,10 +50,7 @@ public class UserController {
     //TODO AOP加操作日志
     public ResultInfo<?> cmsRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
         UserInfo userInfo = ThreadLocalUser.getUserInfo();
-        request.setPlatform(userInfo.getPlatform());
-        request.setFromWay(userInfo.getFromWay());
-        request.setRoles(userInfo.getRoles());
-        request.setUid(userInfo.getUid());
+        request.setUserInfo(userInfo);
         TokenDTO token = userService.cmsRegister(request);
         return ResultInfo.success(token);
     }
@@ -72,16 +67,18 @@ public class UserController {
 
     @RequestMapping(value = "update" ,method = RequestMethod.POST)
     @ResponseBody
+    @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> updateUserInfo(@Validated(value = {UpdateGroup.class})  @RequestBody UserRequest request){
+        UserInfo userInfo = ThreadLocalUser.getUserInfo();
+        request.setUserInfo(userInfo);
         Boolean result = userService.update(request);
         return ResultInfo.success(result);
     }
 
-
     @RequestMapping(value = "queryUsers" ,method = RequestMethod.POST)
     @ResponseBody
-    //TODO AOP加操作日志  @Validated(value = {UpdateGroup.class})
+    //TODO AOP加操作日志
     public ResultInfo<PaginatedResultData<UserInfoVo>> queryUsers(@RequestBody UserQuery query){
 
         Integer total = userService.getTotal(query);
@@ -90,5 +87,12 @@ public class UserController {
             resultList = userService.getList(query);
         }
         return ResultInfo.buildPaginatedResult(query, resultList, total);
+    }
+
+    @RequestMapping(value = "delete" ,method = RequestMethod.DELETE)
+    @ResponseBody
+    //TODO AOP加操作日志
+    public ResultInfo<?> delete(String userId){
+        return ResultInfo.success(userService.delete(ThreadLocalUser.getUserInfo() ,userId));
     }
 }

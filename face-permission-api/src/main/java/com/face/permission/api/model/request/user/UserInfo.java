@@ -1,11 +1,8 @@
 package com.face.permission.api.model.request.user;
 
 
-import com.face.permission.api.model.request.valids.groups.CreateGroup;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 /**
  * @Description
@@ -24,7 +21,7 @@ public class UserInfo {
     /**
      * 昵称
      */
-    private String nickName;
+    private String nickName_;
 
     /**
      * 操作人权限集合

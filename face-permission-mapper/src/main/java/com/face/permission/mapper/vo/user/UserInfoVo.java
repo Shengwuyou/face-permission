@@ -12,6 +12,11 @@ import java.time.LocalDateTime;
  */
 public class UserInfoVo {
 
+    /**
+     * 发起注册请求的用户
+     */
+    private String parentUserId;
+
     @ApiModelProperty("uId")
     private String uId;
 
@@ -33,11 +38,17 @@ public class UserInfoVo {
     @ApiModelProperty("登陆账号")
     private String loginName;
 
+    @ApiModelProperty("登陆密码")
+    private String password;
+
     @ApiModelProperty("账号等级")
     private Integer grade;
 
     @ApiModelProperty("账号类型: (0游客/1普通/2VIP/3管理员/4root)")
     private Integer type;
+
+    @ApiModelProperty("权限")
+    private String roles;
 
     @ApiModelProperty("账号创建时间")
     private LocalDateTime createTime;
@@ -120,5 +131,29 @@ public class UserInfoVo {
 
     public void setCreateTime(LocalDateTime createTime) {
         this.createTime = createTime;
+    }
+
+    public String getParentUserId() {
+        return parentUserId;
+    }
+
+    public void setParentUserId(String parentUserId) {
+        this.parentUserId = parentUserId;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
     }
 }

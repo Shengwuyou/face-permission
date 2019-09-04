@@ -1,7 +1,6 @@
 package com.face.permission.server.web.controller;
 
 import com.face.permission.server.Application;
-import com.face.permission.service.interfaces.test.ITestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,13 +31,5 @@ public class BaseMockInit {
         // initialize mock object
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-    }
-
-    @Autowired
-    ITestService testService;
-
-    @Test
-    public void test(){
-        testService.test();
     }
 }

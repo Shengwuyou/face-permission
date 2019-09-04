@@ -5,16 +5,20 @@ import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.constants.RedisKeyCosntant;
+import com.face.permission.common.constants.enums.role.RoleTypeEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
 import com.face.permission.common.exceptions.FaceServiceException;
 import com.face.permission.common.utils.*;
 import com.face.permission.mapper.dao.PAccountMapper;
+import com.face.permission.mapper.dao.PRoleMapper;
 import com.face.permission.mapper.dao.PUserMapper;
 import com.face.permission.mapper.domain.PAccountDO;
+import com.face.permission.mapper.domain.PRoleDo;
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
+import com.face.permission.service.interfaces.roles.IRoleService;
 import com.face.permission.service.interfaces.user.IUserService;
 import com.face.permission.service.template.RedisSelfCacheManager;
 import com.face.permission.service.template.RegisterTemplate;
@@ -23,11 +27,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static com.face.permission.common.constants.RedisKeyCosntant.REGISTER_LOCK_KEY;
+import static com.face.permission.common.constants.RedisKeyCosntant.*;
 import static com.face.permission.common.constants.enums.SystemErrorEnum.ASSERT_ERROR_CODE;
 import static com.face.permission.common.utils.JwtUtils.DEFAULT_TOKEN_EXPIRE_TIME;
 
@@ -48,10 +57,17 @@ public class UserServiceImpl implements IUserService {
     PAccountMapper accountMapper;
 
     @Autowired
+    PRoleMapper roleMapper;
+
+    @Autowired
     RegisterTemplate cmsUserRegister;
 
     @Autowired
     RedisSelfCacheManager redisSelfCacheManager;
+
+    @Autowired
+    IRoleService roleService;
+
 
     @Override
     public TokenDTO selfRegister(UserRequest request) {
@@ -72,8 +88,29 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public PUserDO getUser(String userId){
+        String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userId;
+        PUserDO userDO = redisSelfCacheManager.get(userInfoKey, PUserDO.class);
+        if (userDO == null){
+            userDO = userMapper.selectByUID(userId);
+        }
+        return userDO;
+    }
+
+    @Override
+    public PAccountDO getAccount(String userId){
+        String accountKey = RedisKeyCosntant.USER_ACCOUNT_KEY + userId;
+        PAccountDO accountDO = redisSelfCacheManager.get( accountKey, PAccountDO.class);
+
+        if (accountDO == null){
+            accountDO = accountMapper.selectByUserId(userId, null, null);
+        }
+        return accountDO;
+    }
+
+    @Override
     public TokenDTO login(UserLoginDTO request) {
-        checkLoginName(request);
+        request.checkLoginName();
 
         PUserDO userDO = null;
         String uId = null;
@@ -99,9 +136,65 @@ public class UserServiceImpl implements IUserService {
         return new TokenDTO().setToken(token).setNickName(userDO.getNickName());
     }
 
+    private void checkUpdateRoles(UserRequest request){
+        request.setMobilePhone(null);
+        request.setLoginName(null);
+        Integer[] roles = request.getRoles();
+        List<PRoleDo> allRoles = roleService.getRolesByType(RoleTypeEnum.UPDATE.getCode());
+        List<PRoleDo> userRoles = allRoles.stream().filter(pRoleDo ->
+                Arrays.stream(roles).anyMatch(role -> role == pRoleDo.getRoleCode())).collect(Collectors.toList());
+
+        //整理user需要更新的信息
+        PUserDO userDO = new PUserDO();
+        PAccountDO accountDO = new PAccountDO();
+        userDO.setuId(request.getUserId());
+        accountDO.setUId(request.getUserId());
+        //操作人 与 修改人是否是同一个人   or   root管理员
+        if (Objects.equals(request.getUserId(), request.getUid()) || Arrays.stream(roles).anyMatch(role -> role == 1)){
+            userDO.setNickName(request.getNickName());
+            userDO.setEmail(request.getEmail());
+            userDO.setHeadPic(request.getHeadPic());
+            userDO.setSex(request.getSex());
+            if (StringUtils.isNotBlank(request.getPassword())){
+                accountDO.setPassword(MD5.getMD5(request.getPassword())); //MD5加密存储
+            }
+            accountDO.setStatus(request.getStatus());
+
+            if (Arrays.stream(request.getRoles()).anyMatch(role -> role == 1)){ //root账号改天改地
+                accountDO.setGrade(request.getGrade());
+                accountDO.setType(request.getType());
+                accountDO.setRoles(JSON.toJSONString(request.getRole()));
+            }
+        }else {
+            //非本人用户需要
+            userRoles.forEach(role ->{
+                switch (role.getRoleName()){
+                    case "nickName":  userDO.setNickName(request.getNickName()); break;
+                    case "email":  userDO.setEmail(request.getEmail()); break;
+                    case "headPic":  userDO.setHeadPic(request.getHeadPic()); break;
+                    case "sex":  userDO.setSex(request.getSex()); break;
+
+                    case "password":  accountDO.setPassword(MD5.getMD5(request.getPassword())); break;
+                    case "grade":  accountDO.setGrade(request.getGrade()); break;
+                    case "type":  accountDO.setType(request.getType()); break;
+                    case "roles":  accountDO.setRoles(JSON.toJSONString(request.getRole())); break;
+                    default: break;
+                }
+            } );
+        }
+        AssertUtil.isTrue(userMapper.updateByPrimaryKeySelective(userDO) > 0, "更新用户基本信息失败");
+        AssertUtil.isTrue(accountMapper.updateByPrimaryKeySelective(accountDO) > 0, "更新用户账号信息失败");
+    }
+
     @Override
+    @Transactional
     public boolean update(UserRequest request) {
-        return false;
+        checkUpdateRoles(request);
+        List<String> keys = new ArrayList<>(2);
+        keys.add(USER_INFO_KEY + request.getUserId());
+        keys.add(USER_ACCOUNT_KEY + request.getUserId());
+        redisSelfCacheManager.removeArr(keys);
+        return true;
     }
 
 
@@ -116,11 +209,21 @@ public class UserServiceImpl implements IUserService {
 
     }
 
+    @Override
+    public boolean delete(UserInfo userInfo, String userId) {
+        //权限检查-是否是本人/是否是root
+        AssertUtil.isTrue(Objects.equals(userInfo.getUid(), userId) || Objects.equals(userInfo.getUid(), "1"), "无权限注销");
+        PUserDO userDO = getUser(userId);
+        AssertUtil.notNull(userDO, "注销用户不存在 userID："+ userId);
+        AssertUtil.isTrue(userMapper.updateStatus(userId, 2) > 1, "用户注销失败");
+        return true;
+    }
+
     private String createToken(String uId, Integer[] roles, String nickName, Integer fromWay, String platForm ){
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(uId);
         userInfo.setRoles(roles);
-        userInfo.setNickName(nickName);
+        userInfo.setNickName_(nickName);
         userInfo.setFromWay(fromWay);
         userInfo.setPlatform(platForm);
         try {
@@ -128,26 +231,6 @@ public class UserServiceImpl implements IUserService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new FaceServiceException(ASSERT_ERROR_CODE.getCode(), "登陆异常");
-        }
-    }
-
-    /**
-     * 检查登陆账号 是loginName / mobile / email
-     * @param request
-     */
-    private void checkLoginName(UserLoginDTO request){
-        if (request.getType() == UserEnums.LoginTypeEnum.LOGIN_NAME.getCode()  ){
-            return;
-        } else if (Pattern.matches("^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", request.getLoginName())){
-            request.setType(UserEnums.LoginTypeEnum.LOGIN_NAME.getCode());
-        }else if (ValidatorUtil.isMobile(request.getLoginName())){
-            request.setMobilePhone(request.getLoginName());
-            request.setType(UserEnums.LoginTypeEnum.MOBILE.getCode());
-        }else if (ValidatorUtil.isEmail(request.getLoginName())){
-            request.setEmail(request.getLoginName());
-            request.setType(UserEnums.LoginTypeEnum.EMAIL.getCode());
-        }else {
-            AssertUtil.error("用户账号格式异常");
         }
     }
 

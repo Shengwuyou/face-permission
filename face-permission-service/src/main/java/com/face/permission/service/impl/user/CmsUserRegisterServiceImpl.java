@@ -1,5 +1,6 @@
 package com.face.permission.service.impl.user;
 
+import com.alibaba.fastjson.JSON;
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.common.constants.enums.role.RoleEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
@@ -84,13 +85,15 @@ public class CmsUserRegisterServiceImpl extends RegisterTemplate {
         accountDO.setGrade(0);
         accountDO.setType(request.getType());
         accountDO.setStatus(1);
-        accountDO.setRoles(ConvertUtils.convert(request.getRole()));
+        accountDO.setRoles(JSON.toJSONString(request.getRole()));
         accountDO.setCreateTime(LocalDateTime.now());
         accountDO.setUpdateTime(LocalDateTime.now());
         AssertUtil.isTrue(accountMapper.insertSelective(accountDO) > 0, USER_ACCCOUNT_STORAGE_ERROR.getMsg());
         request.setUid(uId);
 
     }
+
+
 
     @Override
     public String createToken(UserRequest request) {

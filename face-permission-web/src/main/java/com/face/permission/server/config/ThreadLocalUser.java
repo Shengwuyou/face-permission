@@ -8,6 +8,8 @@ import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.JwtUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Objects;
+
 import static com.face.permission.common.utils.JwtUtils.TOKEN_ILLEGAL_MSG;
 
 /**
@@ -59,6 +61,9 @@ public class ThreadLocalUser {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(rt.getUserId());
         userInfo.setRoles(rt.getRoles());
+        userInfo.setNickName_(rt.getNickName());
+        userInfo.setFromWay(rt.getFromWay());
+        userInfo.setPlatform(rt.getPlatForm());
         ThreadLocalUser.setUserInfo(userInfo);
     }
 
@@ -70,8 +75,8 @@ public class ThreadLocalUser {
 
         //TODO 这儿需要加入 用户token唯一性校验 和 版本失效控制校验
         UserInfo userInfo = getUserInfo();
-        userInfo.setPlatform(traceJs.getString("platform"));
-        userInfo.setFromWay(traceJs.getInteger("fromWay"));
+        AssertUtil.isTrue(Objects.equals(traceJs.getString("platform"), userInfo.getPlatform()), "请求平台发生变更，请重新获取token");
+        AssertUtil.isTrue(userInfo.getFromWay() == traceJs.getInteger("fromWay"), "请求来源发生变更，请重新获取token");
         ThreadLocalUser.setUserInfo(userInfo);
     }
 }

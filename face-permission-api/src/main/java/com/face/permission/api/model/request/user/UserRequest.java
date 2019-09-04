@@ -8,7 +8,6 @@ import lombok.Data;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
@@ -98,11 +97,10 @@ public class UserRequest extends UserInfo {
      */
     private Integer[] role;
 
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setUserInfo(UserInfo userInfo ){
+        setPlatform(userInfo.getPlatform());
+        setFromWay(userInfo.getFromWay());
+        setRoles(userInfo.getRoles());
+        setUid(userInfo.getUid());
     }
 }

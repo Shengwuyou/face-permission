@@ -48,7 +48,7 @@ public class PermissionExceptionHandler {
             arr.add(param);
         });
         logger.error(arr.toJSONString(), e);
-        return ResultInfo.error(UserErrorEnum.PARAM_ILLAGEL.getCode(), UserErrorEnum.PARAM_ILLAGEL.getMsg(), arr.toJSONString());
+        return ResultInfo.error(UserErrorEnum.PARAM_ILLAGEL.getCode(), arr.getJSONObject(0).getString("validMessage"));
     }
 
 

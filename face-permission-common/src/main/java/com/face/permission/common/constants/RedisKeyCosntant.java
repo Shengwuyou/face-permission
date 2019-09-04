@@ -21,4 +21,19 @@ public interface RedisKeyCosntant {
      * 用户注册锁，防止重复注册，以手机号为重复拦截条件
      */
     String REGISTER_LOCK_KEY = "u_register_";
+
+    /**
+     *
+     */
+    String ROLE_TYPE_KEY = "u_role_type_";
+
+    /**
+     *
+     */
+    String ROLE_ALL_KEY = "u_role_all";
+
+    /**
+     *
+     */
+    String CAN_SET_ROLE_ALL_KEY = "u_set_role_all";
 }

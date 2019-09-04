@@ -22,6 +22,14 @@ public interface PUserMapper {
 
     int updateByPrimaryKeySelective(PUserDO record);
 
+    /**
+     * 更新用户状态，以此来注销，逻辑删除用户
+     * @param uId
+     * @param status
+     * @return
+     */
+    int updateStatus(@Param("uId") String uId, @Param("status") Integer status);
+
     int updateByPrimaryKey(PUserDO record);
 
     /**

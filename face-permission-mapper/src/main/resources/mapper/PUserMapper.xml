@@ -94,8 +94,10 @@
         pu.status,
         pu.create_time,
         pa.login_name,
+        pa.password,
         pa.grade,
-        pa.type
+        pa.type,
+        pa.roles
         from p_user pu
         left join p_account pa
         on pu.u_id = pa.u_id
@@ -245,9 +247,6 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.face.permission.mapper.domain.PUserDO">
         update p_user
         <set>
-            <if test="uId != null">
-                u_id = #{uId,jdbcType=VARCHAR},
-            </if>
             <if test="nickName != null">
                 nick_name = #{nickName,jdbcType=VARCHAR},
             </if>
@@ -276,7 +275,7 @@
                 ext_json = #{extJson,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where u_id = #{uId,jdbcType=VARCHAR}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.face.permission.mapper.domain.PUserDO">
     update p_user
@@ -292,4 +291,9 @@
       ext_json = #{extJson,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+    <update id="updateStatus">
+        update p_user
+        set status = #{status}
+        where u_id = #{uId}
+    </update>
 </mapper>

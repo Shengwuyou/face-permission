@@ -1,7 +1,9 @@
 package com.face.permission.service.interfaces.user;
 
+import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.mapper.domain.PAccountDO;
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.mapper.query.user.UserQuery;
@@ -38,6 +40,20 @@ public interface IUserService {
     TokenDTO login(UserLoginDTO request);
 
     /**
+     * 获取用户基本信息
+     * @param userId
+     * @return
+     */
+    PUserDO getUser(String userId);
+
+    /**
+     * 获取用户账号信息
+     * @param userId
+     * @return
+     */
+    PAccountDO getAccount(String userId);
+
+    /**
      * 更新用户信息
      * @param request
      * @return
@@ -48,4 +64,11 @@ public interface IUserService {
     Integer getTotal(UserQuery query);
 
     List<UserInfoVo> getList(UserQuery query);
+
+    /**
+     * 销户
+     * @param userId
+     * @return
+     */
+    boolean delete(UserInfo userInfo, String userId);
 }

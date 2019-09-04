@@ -69,7 +69,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        System.out.println("postHandle");
+//        System.out.println("postHandle");
     }
 
     /**
@@ -82,7 +82,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        System.out.println("本次请求结束：开始清除当前请求的userInfo");
+        logger.info("本次请求结束：开始清除当前请求的userInfo");
         ThreadLocalUser.cleanThreadLocal();
     }
 

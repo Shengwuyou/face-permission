@@ -87,6 +87,10 @@
                 <version>${spring-jdbc.version}</version>
             </dependency>
 
+
+            <!--  **********  spring END  ***********-->
+
+            <!--  **********  swagger-api文档  BEGIN ***********-->
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
@@ -97,9 +101,6 @@
                 <artifactId>springfox-swagger-ui</artifactId>
                 <version>${spring-swagger.version}</version>
             </dependency>
-            <!--  **********  spring END  ***********-->
-
-            <!--  **********  swagger-api文档  BEGIN ***********-->
             <dependency>
                 <groupId>io.swagger</groupId>
                 <artifactId>swagger-annotations</artifactId>
@@ -108,6 +109,18 @@
             </dependency>
 
             <!--  **********  swagger-api文档 END  ***********-->
+
+
+            <!--  **********  AOP  BEGIN ***********-->
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>1.8.13</version>
+            </dependency>
+            <!--  **********  AOP END  ***********-->
+
+
+
 
 
             <!--  **********  数据库相关  BEGIN ***********-->

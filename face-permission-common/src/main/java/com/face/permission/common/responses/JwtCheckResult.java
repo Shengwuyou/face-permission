@@ -44,8 +44,23 @@ public class JwtCheckResult {
     }
 
     public String getUserId() {
-        userId = claims.get("userId", String.class);
+        userId = claims.get("uid", String.class);
         return userId;
+    }
+
+    public String getNickName() {
+        String nickName = claims.get("nickName_", String.class);
+        return nickName;
+    }
+
+    public Integer getFromWay() {
+        Integer fromWay = claims.get("fromWay", Integer.class);
+        return fromWay;
+    }
+
+    public String getPlatForm() {
+        String platForm = claims.get("platform", String.class);
+        return platForm;
     }
 
     public void setUserId(String userId) {

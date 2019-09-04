@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,6 +82,23 @@ public class RedisSelfCacheManager {
      * @param key
      * @return
      */
+    public <T> List<T> getList(String key, Class<T> className) {
+        try {
+            Object obj = key == null ? null : redisTemplate.opsForValue().get(key);
+            if (obj != null){
+                return JSONObject.parseArray((String) obj, className);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    /**
+     * @param key
+     * @return
+     */
     public Object get(String key) {
         try {
             return key == null ? null : redisTemplate.opsForValue().get(key);
@@ -88,6 +106,32 @@ public class RedisSelfCacheManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 删除redis中存在的数据
+     * @param key
+     * @return
+     */
+    public boolean remove(String key){
+        return redisTemplate.delete(key);
+    }
+
+    /**
+     * 删除redis中存在的数据
+     * @param keys
+     * @return
+     */
+    public boolean removeArr(List<String> keys){
+        try {
+            Long successNum = redisTemplate.delete(keys);
+            if (successNum != keys.size()){
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 
     /**

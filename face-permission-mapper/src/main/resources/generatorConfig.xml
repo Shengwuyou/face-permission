@@ -61,22 +61,27 @@
         </javaClientGenerator>
 
         <!-- 指定数据库表 -->
-        <table schema="" tableName="p_user" domainObjectName="PUser"
-            enableCountByExample="false" enableDeleteByExample="false"
-            enableUpdateByExample="false" enableSelectByExample="false"
-            selectByExampleQueryId="false">
-        </table>
-
-        <table schema="" tableName="p_account" domainObjectName="PAccount"
+        <table schema="" tableName="p_role" domainObjectName="PRoleDo"
                enableCountByExample="false" enableDeleteByExample="false"
                enableUpdateByExample="false" enableSelectByExample="false"
                selectByExampleQueryId="false">
         </table>
+<!--        <table schema="" tableName="p_user" domainObjectName="PUser"-->
+<!--            enableCountByExample="false" enableDeleteByExample="false"-->
+<!--            enableUpdateByExample="false" enableSelectByExample="false"-->
+<!--            selectByExampleQueryId="false">-->
+<!--        </table>-->
 
-        <table schema="" tableName="p_token" domainObjectName="PToken"
-               enableCountByExample="false" enableDeleteByExample="false"
-               enableUpdateByExample="false" enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+<!--        <table schema="" tableName="p_account" domainObjectName="PAccount"-->
+<!--               enableCountByExample="false" enableDeleteByExample="false"-->
+<!--               enableUpdateByExample="false" enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+
+<!--        <table schema="" tableName="p_token" domainObjectName="PToken"-->
+<!--               enableCountByExample="false" enableDeleteByExample="false"-->
+<!--               enableUpdateByExample="false" enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>
