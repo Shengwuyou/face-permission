@@ -98,6 +98,16 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public void setUser(PUserDO userDO){
+        if (userDO == null){
+            return;
+        }
+        String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userDO.getuId();
+        redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 5*60);
+
+    }
+
+    @Override
     public PAccountDO getAccount(String userId){
         String accountKey = RedisKeyCosntant.USER_ACCOUNT_KEY + userId;
         PAccountDO accountDO = redisSelfCacheManager.get( accountKey, PAccountDO.class);
@@ -210,12 +220,15 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional
     public boolean delete(UserInfo userInfo, String userId) {
         //权限检查-是否是本人/是否是root
         AssertUtil.isTrue(Objects.equals(userInfo.getUid(), userId) || Objects.equals(userInfo.getUid(), "1"), "无权限注销");
         PUserDO userDO = getUser(userId);
-        AssertUtil.notNull(userDO, "注销用户不存在 userID："+ userId);
-        AssertUtil.isTrue(userMapper.updateStatus(userId, 2) > 1, "用户注销失败");
+        AssertUtil.notNull(userDO, "用户不存在uid"+ userId);
+        AssertUtil.isTrue(userMapper.updateStatus(userId, 2) > 0, "用户注销失败");
+        userDO.setStatus(2);
+        setUser(userDO);
         return true;
     }
 

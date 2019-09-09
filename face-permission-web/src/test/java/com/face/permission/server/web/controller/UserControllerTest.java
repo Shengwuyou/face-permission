@@ -2,6 +2,9 @@ package com.face.permission.server.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.request.user.UserRequest;
+import com.face.permission.common.utils.CharacterUtils;
+import com.face.permission.common.utils.RandomUtil;
+import com.face.permission.common.utils.RandomValueUtil;
 import com.face.permission.server.Application;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,11 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
@@ -34,25 +39,32 @@ public class UserControllerTest{
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-    @Test
+//    @Test
+    @Rollback(value = false)
     public void register() throws Exception {
         UserRequest registerRequest = new UserRequest();
         registerRequest.setParentUserId(null);
-        registerRequest.setNickName("root管理员");
-        registerRequest.setMobilePhone("18368095211");
-        registerRequest.setEmail("987171135@qq.com");
+        registerRequest.setNickName(RandomValueUtil.getChineseName());
+        registerRequest.setMobilePhone(RandomValueUtil.getTelephone());
+        registerRequest.setEmail(RandomValueUtil.getEmail(6,10));
         registerRequest.setHeadPic(null);
-        registerRequest.setSex(0);
+        registerRequest.setSex(RandomValueUtil.getNum(1,2));
         registerRequest.setStatus(1);
-        registerRequest.setLoginName("root");
-        registerRequest.setPassword("Admin123");
+        String loginNameAndPsw = CharacterUtils.getRandomFixLen();
+        registerRequest.setLoginName(loginNameAndPsw);
+        registerRequest.setPassword(loginNameAndPsw);
         registerRequest.setGrade(0);
         registerRequest.setType(1);
-        registerRequest.setRole(null);
+        Integer[] roles = new Integer[2];
+        roles[0] = 3;
+        roles[1] = 5;
+        registerRequest.setRole(roles);
 
         MvcResult result = this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/selfRegister")
-                            .contentType(MediaType.APPLICATION_JSON_UTF8)
+                MockMvcRequestBuilders.post("/user/cmsRegister")
+                            .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwiZnJvbVdheSI6MCwicm9sZXMiOlsxXSwiaXNzIjoicm9vdCIsIm5pY2tOYW1lXyI6IlJPT1TnrqHnkIblkZgiLCJleHAiOjE1Njc5MDcxNDgsImlhdCI6MTU2NzkwNjg0OCwicGxhdGZvcm0iOiJwYyJ9.XsRYEhmJSQjAMPVg4ez-PjMDHRavlq8BDgl1s3ixv1Q")
+                            .header("trace","{\"fromWay\":0,\"platform\":\"pc\"}")
+                        .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(JSONObject.toJSONString(registerRequest))
                             )
                 .andReturn();
@@ -61,6 +73,14 @@ public class UserControllerTest{
         System.out.println(response.getContentAsString());
     }
 
+    @Test
+    @Rollback(value = false)
+    public void createUser() throws Exception {
+        for (int i = 0; i < 100; i++) {
+            Thread.sleep(300);
+            register();
+        }
+    }
 
     @Test
     public void login() throws Exception {

@@ -64,7 +64,7 @@ public class PermissionExceptionHandler {
     @ExceptionHandler(value = {FaceServiceException.class})
     public ResultInfo<?> faceServiceException(FaceServiceException e) {
         logger.error(e);
-        return ResultInfo.error(ReturnConstant.UNKNOW_ERROR, e.getMessage());
+        return ResultInfo.error(e.getCode()== null?ReturnConstant.UNKNOW_ERROR:e.getCode(), e.getMessage());
     }
 
 

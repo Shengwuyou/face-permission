@@ -89,10 +89,11 @@ public class UserController {
         return ResultInfo.buildPaginatedResult(query, resultList, total);
     }
 
-    @RequestMapping(value = "delete" ,method = RequestMethod.DELETE)
+    @RequestMapping(value = "delete/{userId}" ,method = RequestMethod.POST)
     @ResponseBody
+    @LoginIntercept
     //TODO AOP加操作日志
-    public ResultInfo<?> delete(String userId){
+    public ResultInfo<?> delete(@PathVariable("userId") String userId){
         return ResultInfo.success(userService.delete(ThreadLocalUser.getUserInfo() ,userId));
     }
 }

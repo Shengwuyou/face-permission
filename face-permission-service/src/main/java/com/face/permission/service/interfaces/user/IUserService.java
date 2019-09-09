@@ -47,6 +47,11 @@ public interface IUserService {
     PUserDO getUser(String userId);
 
     /**
+     * 保存用户信息
+     * @param userDO
+     */
+    void setUser(PUserDO userDO);
+    /**
      * 获取用户账号信息
      * @param userId
      * @return

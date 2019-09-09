@@ -13,6 +13,10 @@ public class FaceServiceException extends RuntimeException implements Serializab
 
     private ResultInfo<Object> result;
 
+    public Long getCode(){
+        return result == null?null:result.getCode();
+    }
+
     public FaceServiceException(Long code, String message) {
         super(message);
         this.result = new ResultInfo<>(code,message);

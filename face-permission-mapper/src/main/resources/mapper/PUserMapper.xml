@@ -60,7 +60,7 @@
                 and pu.u_id = #{uId}
             </if>
             <if test="nickName != null">
-                and pu.nick_name = #{nickName}
+                and pu.nick_name like concat('%',#{nickName},'%')
             </if>
             <if test="mobilePhone != null">
                 and pu.mobile_phone = #{mobilePhone}
@@ -70,6 +70,9 @@
             </if>
             <if test="loginName != null">
                 and pa.login_name = #{loginName}
+            </if>
+            <if test="status != null">
+                and pu.status = #{status}
             </if>
             <if test="type != null">
                 and pa.type = #{type}
@@ -103,10 +106,10 @@
         on pu.u_id = pa.u_id
         <where>
             <if test="uId != null">
-                pu.u_id = #{uId}
+                and pu.u_id = #{uId}
             </if>
             <if test="nickName != null">
-                and pu.nick_name = #{nickName}
+                and pu.nick_name like concat('%',#{nickName},'%')
             </if>
             <if test="mobilePhone != null">
                 and pu.mobile_phone = #{mobilePhone}
@@ -116,6 +119,9 @@
             </if>
             <if test="loginName != null">
                 and pa.login_name = #{loginName}
+            </if>
+            <if test="status != null">
+                and pu.status = #{status}
             </if>
             <if test="type != null">
                 and pa.type = #{type}
