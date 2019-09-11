@@ -5,16 +5,12 @@ import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.LoggerUtil;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import springfox.documentation.spring.web.json.Json;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
