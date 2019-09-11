@@ -70,6 +70,16 @@
 
             <!--  **********  spring  BEGIN ***********-->
             <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+           <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring-context.version}</version>
@@ -87,6 +97,11 @@
                 <version>${spring-jdbc.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-log4j2</artifactId>
+                <version>LATEST</version>
+            </dependency>
 
             <!--  **********  spring END  ***********-->
 
@@ -162,11 +177,11 @@
             <!--  **********  数据库相关 END  ***********-->
 
             <!--  **********  redis  BEGIN ***********-->
-                <dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-data-redis</artifactId>
-                    <version>${jedis-version}</version>
-                </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${jedis-version}</version>
+            </dependency>
             <!--  **********  redis  END  ***********-->
 
         </dependencies>

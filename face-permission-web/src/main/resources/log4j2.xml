@@ -4,79 +4,81 @@
     <properties>
         <!-- 文件输出格式 -->
         <property name="pattern">[%d],[%p],%X,%c,%m%n</property>
+        <property name="LOG_PATH">/logs/face-permission</property>
     </properties>
 
+
+    <!--日志输出的级别    ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF-->
     <appenders>
         <!-- 控制台输出 -->
         <Console name="console" target="SYSTEM_OUT">
-            SYSTEM_OUT<ThresholdFilter level="debug" onMatch="ACCEPT"
-            onMismatch="DENY" />
+            SYSTEM_OUT<ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY" />
             <PatternLayout pattern="${pattern}"/>
         </Console>
 
         <!-- error统一日志 -->
-        <RollingFile name="common-error" fileName="${logging.path}/common-error.log"
-                     filePattern="${logging.path}/$${date:yyyy-MM}/common-error-%d{yyyy-MM-dd}.log">
+        <RollingFile name="common-error" fileName="${LOG_PATH}/common-error.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/common-error-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${pattern}"/>
             <!-- 只显示error级别日志 -->
             <ThresholdFilter level="ERROR"/>
             <Policies>
                 <!-- 每天更新一次,单位依赖于filePattern后的日期格式 -->
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-                <SizeBasedTriggeringPolicy size="500M"/>
+                <SizeBasedTriggeringPolicy size="5M"/>
             </Policies>
             <!-- 最多备份14个 -->
-            <DefaultRolloverStrategy max="14"/>
+            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
 
         <!-- 拦截器日志 -->
-        <RollingFile name="interceptor" fileName="${logging.path}/access.log"
-                     filePattern="${logging.path}/$${date:yyyy-MM}/access-%d{yyyy-MM-dd}.log">
+        <RollingFile name="interceptor" fileName="${LOG_PATH}/access.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/access-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="%m%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-                <SizeBasedTriggeringPolicy size="500M"/>
+                <SizeBasedTriggeringPolicy size="5M"/>
             </Policies>
-            <DefaultRolloverStrategy max="14"/>
+            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
 
         <!-- 队列调度日志 -->
-        <RollingFile name="schedule" fileName="${logging.path}/schedule.log"
-                     filePattern="${logging.path}/$${date:yyyy-MM}/schedule-%d{yyyy-MM-dd}.log">
+        <RollingFile name="schedule" fileName="${LOG_PATH}/schedule.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/schedule-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${pattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-                <SizeBasedTriggeringPolicy size="500M"/>
+                <SizeBasedTriggeringPolicy size="5M"/>
             </Policies>
-            <DefaultRolloverStrategy max="7"/>
+            <DefaultRolloverStrategy max="3"/>
         </RollingFile>
 
         <!-- 业务默认日志 -->
-        <RollingFile name="http-remote" fileName="${logging.path}/http-remote.log"
-                     filePattern="${logging.path}/$${date:yyyy-MM}/http-remote-%d{yyyy-MM-dd}.log">
+        <RollingFile name="http-remote" fileName="${LOG_PATH}/http-remote.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/http-remote-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${pattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-                <SizeBasedTriggeringPolicy size="1000M"/>
+                <SizeBasedTriggeringPolicy size="5M"/>
             </Policies>
             <DefaultRolloverStrategy>
-                <Delete basePath="${logging.path}" maxDepth="2">
+                <Delete basePath="${LOG_PATH}" maxDepth="2">
                     <IfFileName glob="*/http-remote-*.log" />
-                    <IfLastModified age="7d" />
+                    <IfLastModified age="4d" />
                 </Delete>
             </DefaultRolloverStrategy>
         </RollingFile>
 
 
         <!-- 业务默认日志 -->
-        <RollingFile name="common-default" fileName="${logging.path}/common-default.log"
-                     filePattern="${logging.path}/$${date:yyyy-MM}/common-default-%d{yyyy-MM-dd}.log">
+        <RollingFile name="common-default" fileName="${LOG_PATH}/common-default.log"
+                     filePattern="${LOG_PATH}/$${date:yyyy-MM}/common-default-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${pattern}"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-                <SizeBasedTriggeringPolicy size="1000M"/>
+                <SizeBasedTriggeringPolicy size="10M"/>
             </Policies>
-            <DefaultRolloverStrategy max="14"/>
+            <DefaultRolloverStrategy max="4"/>
         </RollingFile>
     </appenders>
 
@@ -116,11 +118,6 @@
             <appender-ref ref="console"/>
             <appender-ref ref="common-default"/>
         </Logger>
-
-       <!-- <logger name="com.xiangwang.njia.dao" level="debug" additivity="false">
-            <appender-ref ref="console"/>
-            <appender-ref ref="common-default"/>
-        </logger>-->
 
 		<Logger name="org.springframework.beans.factory" level="INFO"/>
         <root level="info">
