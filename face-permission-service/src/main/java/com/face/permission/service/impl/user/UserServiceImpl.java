@@ -266,19 +266,4 @@ public class UserServiceImpl implements IUserService {
         redisSelfCacheManager.set(RedisKeyCosntant.USER_ACCOUNT_KEY + accountDO.getUId(), JSON.toJSONString(accountDO), 60 * 3);
         return accountDO;
     }
-
-    @Override
-    @Transactional
-    public void test() {
-        PUserDO userDO= new PUserDO();
-        userDO.setuId("12");
-        userDO.setNickName("123");
-        userDO.setMobilePhone("18000000000");
-        userMapper.insertSelective(userDO);
-        try {
-            Thread.sleep(300000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
 }

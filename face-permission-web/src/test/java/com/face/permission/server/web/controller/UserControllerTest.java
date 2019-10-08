@@ -3,7 +3,6 @@ package com.face.permission.server.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.common.utils.CharacterUtils;
-import com.face.permission.common.utils.RandomUtil;
 import com.face.permission.common.utils.RandomValueUtil;
 import com.face.permission.server.Application;
 import org.junit.Before;
@@ -20,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
@@ -121,6 +119,4 @@ public class UserControllerTest{
         MockHttpServletResponse response = result.getResponse();
         System.out.println(response.getContentAsString());
     }
-
-
 }

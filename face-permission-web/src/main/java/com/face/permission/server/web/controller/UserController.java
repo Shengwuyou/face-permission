@@ -15,7 +15,6 @@ import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
 import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 

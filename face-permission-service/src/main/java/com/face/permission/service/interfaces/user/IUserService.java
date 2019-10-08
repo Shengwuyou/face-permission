@@ -84,6 +84,4 @@ public interface IUserService {
      * @return
      */
     boolean delete(UserInfo userInfo, String userId);
-
-    void test();
 }
