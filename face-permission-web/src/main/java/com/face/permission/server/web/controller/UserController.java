@@ -27,7 +27,7 @@ import java.util.List;
  * @Author xuyizhong
  * @Date 2019-07-18 14:38
  */
-@Controller
+@RestController
 @RequestMapping(value = "user")
 @Validated
 public class UserController {
@@ -35,8 +35,7 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @RequestMapping(value = "selfRegister" ,method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "register/client" ,method = RequestMethod.POST)
     @LoginIntercept(require = false)
     //TODO AOP加操作日志
     public ResultInfo<?> selfRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
@@ -44,8 +43,7 @@ public class UserController {
         return ResultInfo.success(token);
     }
 
-    @RequestMapping(value = "cmsRegister" ,method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "register/cms" ,method = RequestMethod.POST)
     @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> cmsRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
@@ -57,7 +55,6 @@ public class UserController {
 
 
     @RequestMapping(value = "login" ,method = RequestMethod.POST)
-    @ResponseBody
     @LoginIntercept(require = false)
     //TODO AOP加操作日志
     public ResultInfo<?> login(@Validated(value = {RetrieveGroup.class})  @RequestBody UserLoginDTO request){
@@ -65,8 +62,16 @@ public class UserController {
         return ResultInfo.success(token);
     }
 
+    @RequestMapping(value = "check/{userId}" ,method = RequestMethod.GET)
+    //TODO AOP加操作日志
+    public ResultInfo<?> checkUser(@PathVariable(value ="userId") String userId){
+        UserInfo userInfo = ThreadLocalUser.getUserInfo();
+        //加验签的方法
+        UserInfoVo userInfoVo = userService.check(userId, userInfo);
+        return ResultInfo.success(userInfoVo);
+    }
+
     @RequestMapping(value = "update" ,method = RequestMethod.POST)
-    @ResponseBody
     @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> updateUserInfo(@Validated(value = {UpdateGroup.class})  @RequestBody UserRequest request){
@@ -76,8 +81,7 @@ public class UserController {
         return ResultInfo.success(result);
     }
 
-    @RequestMapping(value = "queryUsers" ,method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/users/query" ,method = RequestMethod.POST)
     //TODO AOP加操作日志
     public ResultInfo<PaginatedResultData<UserInfoVo>> queryUsers(@RequestBody UserQuery query){
 
@@ -90,7 +94,6 @@ public class UserController {
     }
 
     @RequestMapping(value = "delete/{userId}" ,method = RequestMethod.POST)
-    @ResponseBody
     @LoginIntercept
     //TODO AOP加操作日志
     public ResultInfo<?> delete(@PathVariable("userId") String userId){

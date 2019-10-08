@@ -91,6 +91,7 @@
         select
         pu.u_id,
         pu.nick_name,
+        pu.head_pic,
         pu.mobile_phone,
         pu.sex,
         pu.email,

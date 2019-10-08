@@ -111,7 +111,6 @@ public class Swagger2 {
 		UserLoginDTO userLoginDTO = new UserLoginDTO();
 		userLoginDTO.setLoginName("Admin123");
 		userLoginDTO.setPassword("Admin123");
-		userLoginDTO.setType(0);
 		TokenDTO token = userService.login(userLoginDTO);
 		aParameterBuilder.name(WebConstant.TOKENDATA).allowMultiple(true)
 				.description(

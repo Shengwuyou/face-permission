@@ -1,11 +1,14 @@
 package com.face.permission.server.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.LoggerUtil;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
+import com.face.permission.service.template.RedisSelfCacheManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -16,6 +19,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 
 import static com.face.permission.common.constants.enums.SystemErrorEnum.UNKONW_HTTP_REQUEST;
+import static com.face.permission.common.utils.HttpIpAddrUtil.getRemoteIp;
 import static com.face.permission.server.config.ThreadLocalUser.checkToken;
 import static com.face.permission.server.config.ThreadLocalUser.checkTrace;
 
@@ -26,6 +30,9 @@ import static com.face.permission.server.config.ThreadLocalUser.checkTrace;
  */
 public class LoginInterceptorHandler implements HandlerInterceptor {
     private Logger logger = LoggerUtil.HTTP_REMOTE;
+
+    @Autowired
+    RedisSelfCacheManager redisSelfCacheManager;
 
 
     @Override
@@ -40,18 +47,21 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
 
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method =  handlerMethod.getMethod();
-        //检查请求是否登陆----规则见JWT
+        //3.对IP 重复提交做拦截
+        String remoteIp = getRemoteIp(request);
+        AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(remoteIp + method.getName(), "IP RUNNING", 5), "请勿重复提交请求");
+
+        //4.检查请求是否登陆----规则见JWT
         String token = request.getHeader("token");
-        //2.检查是否存在登陆拦截
+        //.检查是否存在登陆拦截
         LoginIntercept loginIntercept = method.getAnnotation(LoginIntercept.class);
         if (loginIntercept != null && loginIntercept.require()){
-            checkToken(token);
-
+            UserInfo userInfo = checkToken(token);
+            //5.对相同用户 重复提交做拦截
+            AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(userInfo.getUid() + method.getName(), "UID RUNNING", 5), "请勿重复提交请求");
             String trace = request.getHeader("trace");
             checkTrace(trace);
         }
-
-        //3.拦截器前置判断通过，进入
         return true;
     }
 
@@ -78,7 +88,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
      */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        logger.info("本次请求结束：开始清除当前请求的userInfo");
+        logger.info("请求结束：开始清除当前请求的userInfo");
         ThreadLocalUser.cleanThreadLocal();
     }
 

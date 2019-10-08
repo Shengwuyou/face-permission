@@ -39,8 +39,8 @@ public class UserControllerTest{
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
 
-//    @Test
-    @Rollback(value = false)
+    @Test
+//    @Rollback(value = false)
     public void register() throws Exception {
         UserRequest registerRequest = new UserRequest();
         registerRequest.setParentUserId(null);
@@ -61,8 +61,8 @@ public class UserControllerTest{
         registerRequest.setRole(roles);
 
         MvcResult result = this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/cmsRegister")
-                            .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwiZnJvbVdheSI6MCwicm9sZXMiOlsxXSwiaXNzIjoicm9vdCIsIm5pY2tOYW1lXyI6IlJPT1TnrqHnkIblkZgiLCJleHAiOjE1Njc5MDcxNDgsImlhdCI6MTU2NzkwNjg0OCwicGxhdGZvcm0iOiJwYyJ9.XsRYEhmJSQjAMPVg4ez-PjMDHRavlq8BDgl1s3ixv1Q")
+                MockMvcRequestBuilders.post("/user/register/cms")
+                            .header("token", "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiIxIiwiZnJvbVdheSI6bnVsbCwicm9sZXMiOlsxXSwiaXNzIjoicm9vdCIsIm5pY2tOYW1lXyI6IlJPT1TnrqHnkIblkZgiLCJleHAiOjE1Njk4MzE2MTgsImlhdCI6MTU2OTgzMTMxOCwicGxhdGZvcm0iOm51bGx9.X9OMi5hdqcReKk1N6zU-_pf1VbSGMfIEQzUy94SCCek")
                             .header("trace","{\"fromWay\":0,\"platform\":\"pc\"}")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                             .content(JSONObject.toJSONString(registerRequest))
@@ -86,7 +86,7 @@ public class UserControllerTest{
     public void login() throws Exception {
         UserRequest registerRequest = new UserRequest();
         registerRequest.setParentUserId(null);
-//        registerRequest.setMobilePhone("12345678901");
+        registerRequest.setLoginName("18368095211");
 //        registerRequest.setEmail("1@163.com");
 //        registerRequest.setLoginName("admin123");  //LoginName 可以是loginName / email / mobilePhone
         registerRequest.setPassword("Admin123");
@@ -121,4 +121,6 @@ public class UserControllerTest{
         MockHttpServletResponse response = result.getResponse();
         System.out.println(response.getContentAsString());
     }
+
+
 }

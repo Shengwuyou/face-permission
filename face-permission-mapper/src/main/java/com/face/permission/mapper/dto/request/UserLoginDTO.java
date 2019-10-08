@@ -26,6 +26,10 @@ public class UserLoginDTO {
     private String loginName;
 
     /**
+     * 密码
+     */
+    private String password;
+    /**
      * 手机号 11位数字
      */
     private String mobilePhone;
@@ -34,14 +38,8 @@ public class UserLoginDTO {
      */
     private String email;
 
-
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 登陆类型 0 : loginName 1 : mobile 2 : email
+     * 账号类型
      */
     private Integer type;
 
@@ -59,17 +57,22 @@ public class UserLoginDTO {
     /**
      * 检查登陆账号 是loginName / mobile / email
      */
-    public void checkLoginName(){
+    public UserEnums.LoginTypeEnum checkLoginName(){
+        UserEnums.LoginTypeEnum loginTypeEnum = null;
         if (Pattern.matches("^(?!.*[\\\\W])(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,16}$", loginName)){
-            setType(UserEnums.LoginTypeEnum.LOGIN_NAME.getCode());
+            loginTypeEnum = UserEnums.LoginTypeEnum.LOGIN_NAME;
         }else if (ValidatorUtil.isMobile(loginName)){
             setMobilePhone(loginName);
-            setType(UserEnums.LoginTypeEnum.MOBILE.getCode());
+            loginTypeEnum =  UserEnums.LoginTypeEnum.MOBILE;
         }else if (ValidatorUtil.isEmail(loginName)){
             setEmail(loginName);
-            setType(UserEnums.LoginTypeEnum.EMAIL.getCode());
+            loginTypeEnum =  UserEnums.LoginTypeEnum.EMAIL;
         }else {
             AssertUtil.error("用户账号格式异常");
         }
+        type = loginTypeEnum.getCode();
+        return loginTypeEnum;
     }
+
+
 }

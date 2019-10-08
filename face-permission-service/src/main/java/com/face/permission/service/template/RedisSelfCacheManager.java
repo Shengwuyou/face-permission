@@ -27,9 +27,9 @@ public class RedisSelfCacheManager {
      * @param value
      * @return
      */
-    public boolean setIfAbsent(String key, String value, Long second) {
+    public boolean setIfAbsent(String key, String value, int second) {
         if (second <= 0) {
-            second = 60L;
+            second = 60;
         }
         return setIfAbsent(key, value, second * 1000);
     }

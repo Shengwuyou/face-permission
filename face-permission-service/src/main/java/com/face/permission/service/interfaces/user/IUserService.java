@@ -40,6 +40,14 @@ public interface IUserService {
     TokenDTO login(UserLoginDTO request);
 
     /**
+     * 查询用户详细信息
+     * @param userId
+     * @param userInfo
+     * @return
+     */
+    UserInfoVo check(String userId, UserInfo userInfo);
+
+    /**
      * 获取用户基本信息
      * @param userId
      * @return
@@ -76,4 +84,6 @@ public interface IUserService {
      * @return
      */
     boolean delete(UserInfo userInfo, String userId);
+
+    void test();
 }

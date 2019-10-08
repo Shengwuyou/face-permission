@@ -1,6 +1,5 @@
 package com.face.permission.mapper.vo.user;
 
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
@@ -22,6 +21,12 @@ public class UserInfoVo {
 
     @ApiModelProperty("昵称")
     private String nickName;
+
+    /**
+     * 头像图片url
+     */
+    @ApiModelProperty("头像")
+    private String headPic;
 
     @ApiModelProperty("手机号")
     private String mobilePhone;

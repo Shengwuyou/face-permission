@@ -88,6 +88,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public UserInfoVo check(String userId, UserInfo userInfo) {
+        return null;
+    }
+
+    @Override
     public PUserDO getUser(String userId){
         String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userId;
         PUserDO userDO = redisSelfCacheManager.get(userInfoKey, PUserDO.class);
@@ -120,13 +125,13 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public TokenDTO login(UserLoginDTO request) {
-        request.checkLoginName();
+        UserEnums.LoginTypeEnum loginTypeEnum = request.checkLoginName();
 
         PUserDO userDO = null;
         String uId = null;
-        if (request.getType() != UserEnums.LoginTypeEnum.LOGIN_NAME.getCode()){
+        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME){
             userDO = userMapper.selectByLoginType(request);
-            AssertUtil.isTrue( userDO != null , "账号不存在");
+            AssertUtil.isTrue( userDO != null , "登陆信息异常");
             uId = userDO.getuId();
             String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
@@ -159,7 +164,7 @@ public class UserServiceImpl implements IUserService {
         PAccountDO accountDO = new PAccountDO();
         userDO.setuId(request.getUserId());
         accountDO.setUId(request.getUserId());
-        //操作人 与 修改人是否是同一个人   or   root管理员
+        //本人操作  or   root管理员操作
         if (Objects.equals(request.getUserId(), request.getUid()) || Arrays.stream(roles).anyMatch(role -> role == 1)){
             userDO.setNickName(request.getNickName());
             userDO.setEmail(request.getEmail());
@@ -176,7 +181,7 @@ public class UserServiceImpl implements IUserService {
                 accountDO.setRoles(JSON.toJSONString(request.getRole()));
             }
         }else {
-            //非本人用户需要
+            //非用户本人
             userRoles.forEach(role ->{
                 switch (role.getRoleName()){
                     case "nickName":  userDO.setNickName(request.getNickName()); break;
@@ -216,7 +221,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public List<UserInfoVo> getList(UserQuery query) {
         return userMapper.selectUsers(query);
-
     }
 
     @Override
@@ -261,5 +265,20 @@ public class UserServiceImpl implements IUserService {
         AssertUtil.isTrue( accountDO != null , "账户不存在");
         redisSelfCacheManager.set(RedisKeyCosntant.USER_ACCOUNT_KEY + accountDO.getUId(), JSON.toJSONString(accountDO), 60 * 3);
         return accountDO;
+    }
+
+    @Override
+    @Transactional
+    public void test() {
+        PUserDO userDO= new PUserDO();
+        userDO.setuId("12");
+        userDO.setNickName("123");
+        userDO.setMobilePhone("18000000000");
+        userMapper.insertSelective(userDO);
+        try {
+            Thread.sleep(300000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -53,7 +53,7 @@ public class ThreadLocalUser {
      * @param token
      * @return
      */
-    public static void checkToken(String token){
+    public static UserInfo checkToken(String token){
         AssertUtil.isTrue(StringUtils.isNotBlank(token), ReturnConstant.TOKEN_ILLEGAL, TOKEN_ILLEGAL_MSG);
         JwtCheckResult rt = JwtUtils.validateJWT(token);
         //TODO 这儿需要加入 用户token唯一性校验 和 版本失效控制校验
@@ -65,6 +65,7 @@ public class ThreadLocalUser {
         userInfo.setFromWay(rt.getFromWay());
         userInfo.setPlatform(rt.getPlatForm());
         ThreadLocalUser.setUserInfo(userInfo);
+        return userInfo;
     }
 
     public static void checkTrace(String trace){
@@ -73,7 +74,7 @@ public class ThreadLocalUser {
         }
         JSONObject traceJs = JSONObject.parseObject(trace);
 
-        //TODO 这儿需要加入 用户token唯一性校验 和 版本失效控制校验
+        //TODO 这儿需要加入 用户token唯一性校验 和 版本失效控制校验, 实现单点登录
         UserInfo userInfo = getUserInfo();
         AssertUtil.isTrue(Objects.equals(traceJs.getString("platform"), userInfo.getPlatform()), "请求平台发生变更，请重新获取token");
         AssertUtil.isTrue(userInfo.getFromWay() == traceJs.getInteger("fromWay"), "请求来源发生变更，请重新获取token");
