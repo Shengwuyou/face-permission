@@ -2,11 +2,11 @@ package com.face.permission.server.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.request.user.UserInfo;
+import com.face.permission.common.annoations.LoginIntercept;
+import com.face.permission.common.annoations.RepeatSubmitCheck;
 import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.LoggerUtil;
 import com.face.permission.server.config.ThreadLocalUser;
-import com.face.permission.server.config.annoations.LoginIntercept;
-import com.face.permission.server.config.annoations.RepeatSubmitCheck;
 import com.face.permission.service.template.RedisSelfCacheManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

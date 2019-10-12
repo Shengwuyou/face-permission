@@ -1,6 +1,5 @@
 package com.face.permission.common.constants.enums;
 
-import com.alibaba.fastjson.parser.deserializer.ASMDeserializerFactory;
 
 /**
  * @Description

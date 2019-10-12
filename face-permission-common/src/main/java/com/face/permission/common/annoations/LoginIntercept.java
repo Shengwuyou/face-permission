@@ -1,4 +1,4 @@
-package com.face.permission.server.config.annoations;
+package com.face.permission.common.annoations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

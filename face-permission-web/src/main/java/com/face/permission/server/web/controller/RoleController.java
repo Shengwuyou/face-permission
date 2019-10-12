@@ -1,9 +1,8 @@
 package com.face.permission.server.web.controller;
 
-import com.alibaba.fastjson.JSONObject;
+import com.face.permission.common.annoations.LoginIntercept;
 import com.face.permission.common.responses.ResultInfo;
 import com.face.permission.mapper.domain.PRoleDo;
-import com.face.permission.server.config.annoations.LoginIntercept;
 import com.face.permission.service.interfaces.roles.IRoleService;
 import com.face.permission.service.template.RedisSelfCacheManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.face.permission.api.model.request.user;
+package com.face.permission.common.model.request.user;
 
 
 import com.face.permission.common.model.request.valids.groups.CreateGroup;
@@ -17,6 +17,7 @@ import javax.validation.constraints.Pattern;
  */
 @Data
 public class UserRequest extends UserInfo {
+
     /**
      * 发起注册请求的用户
      */
