@@ -2,17 +2,15 @@ package com.face.permission.server.web.controller;
 
 import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.api.model.request.user.UserRequest;
-import com.face.permission.api.model.request.valids.groups.CreateGroup;
-import com.face.permission.api.model.request.valids.groups.RetrieveGroup;
 import com.face.permission.api.model.request.valids.groups.UpdateGroup;
-import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.responses.PaginatedResultData;
 import com.face.permission.common.responses.ResultInfo;
-import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
 import com.face.permission.server.config.ThreadLocalUser;
+import com.face.permission.server.config.annoations.AopLog;
 import com.face.permission.server.config.annoations.LoginIntercept;
+import com.face.permission.server.config.annoations.RepeatSubmitCheck;
 import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -34,55 +32,28 @@ public class UserController {
     @Autowired
     IUserService userService;
 
-    @RequestMapping(value = "register/client" ,method = RequestMethod.POST)
-    @LoginIntercept(require = false)
-    //TODO AOP加操作日志
-    public ResultInfo<?> selfRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
-        TokenDTO token = userService.selfRegister(request);
-        return ResultInfo.success(token);
-    }
-
-    @RequestMapping(value = "register/cms" ,method = RequestMethod.POST)
-    @LoginIntercept
-    //TODO AOP加操作日志
-    public ResultInfo<?> cmsRegister(@Validated(value = {CreateGroup.class}) @RequestBody UserRequest request){
-        UserInfo userInfo = ThreadLocalUser.getUserInfo();
-        request.setUserInfo(userInfo);
-        TokenDTO token = userService.cmsRegister(request);
-        return ResultInfo.success(token);
-    }
-
-
-    @RequestMapping(value = "login" ,method = RequestMethod.POST)
-    @LoginIntercept(require = false)
-    //TODO AOP加操作日志
-    public ResultInfo<?> login(@Validated(value = {RetrieveGroup.class})  @RequestBody UserLoginDTO request){
-        TokenDTO token = userService.login(request);
-        return ResultInfo.success(token);
-    }
-
-    @RequestMapping(value = "check/{userId}" ,method = RequestMethod.GET)
-    //TODO AOP加操作日志
-    public ResultInfo<?> checkUser(@PathVariable(value ="userId") String userId){
+    @GetMapping(value = "check/{userId}")
+    @RepeatSubmitCheck
+    public ResultInfo<?> checkUser(@PathVariable(value = "userId") String userId) {
         UserInfo userInfo = ThreadLocalUser.getUserInfo();
         //加验签的方法
         UserInfoVo userInfoVo = userService.check(userId, userInfo);
         return ResultInfo.success(userInfoVo);
     }
 
-    @RequestMapping(value = "update" ,method = RequestMethod.POST)
+    @PostMapping(value = "update")
     @LoginIntercept
-    //TODO AOP加操作日志
-    public ResultInfo<?> updateUserInfo(@Validated(value = {UpdateGroup.class})  @RequestBody UserRequest request){
+    @RepeatSubmitCheck
+    @AopLog(mehtodType = AopLog.MethodTypeEnum.UPDATE, mehtodName = "更新用户")
+    public ResultInfo<?> updateUserInfo(@Validated(value = {UpdateGroup.class}) @RequestBody UserRequest request) {
         UserInfo userInfo = ThreadLocalUser.getUserInfo();
         request.setUserInfo(userInfo);
         Boolean result = userService.update(request);
         return ResultInfo.success(result);
     }
 
-    @RequestMapping(value = "/users/query" ,method = RequestMethod.POST)
-    //TODO AOP加操作日志
-    public ResultInfo<PaginatedResultData<UserInfoVo>> queryUsers(@RequestBody UserQuery query){
+    @PostMapping(value = "query")
+    public ResultInfo<PaginatedResultData<UserInfoVo>> queryUsers(@RequestBody UserQuery query) {
 
         Integer total = userService.getTotal(query);
         List<UserInfoVo> resultList = new ArrayList();
@@ -92,10 +63,11 @@ public class UserController {
         return ResultInfo.buildPaginatedResult(query, resultList, total);
     }
 
-    @RequestMapping(value = "delete/{userId}" ,method = RequestMethod.POST)
+    @PostMapping(value = "delete/{userId}")
     @LoginIntercept
-    //TODO AOP加操作日志
-    public ResultInfo<?> delete(@PathVariable("userId") String userId){
-        return ResultInfo.success(userService.delete(ThreadLocalUser.getUserInfo() ,userId));
+    @RepeatSubmitCheck
+    @AopLog(mehtodType = AopLog.MethodTypeEnum.DELETE, mehtodName = "删除用户")
+    public ResultInfo<?> delete(@PathVariable("userId") String userId) {
+        return ResultInfo.success(userService.delete(ThreadLocalUser.getUserInfo(), userId));
     }
 }

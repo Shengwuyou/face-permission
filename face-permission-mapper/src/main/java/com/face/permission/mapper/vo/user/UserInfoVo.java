@@ -161,4 +161,12 @@ public class UserInfoVo {
     public void setRoles(String roles) {
         this.roles = roles;
     }
+
+    public String getHeadPic() {
+        return headPic;
+    }
+
+    public void setHeadPic(String headPic) {
+        this.headPic = headPic;
+    }
 }

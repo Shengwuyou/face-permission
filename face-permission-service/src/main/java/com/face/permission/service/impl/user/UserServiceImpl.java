@@ -25,6 +25,7 @@ import com.face.permission.service.template.RegisterTemplate;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.face.permission.common.constants.RedisKeyCosntant.*;
@@ -60,7 +60,10 @@ public class UserServiceImpl implements IUserService {
     PRoleMapper roleMapper;
 
     @Autowired
-    RegisterTemplate cmsUserRegister;
+    RegisterTemplate cmsRegister;
+
+    @Autowired
+    RegisterTemplate selfRegister;
 
     @Autowired
     RedisSelfCacheManager redisSelfCacheManager;
@@ -71,20 +74,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public TokenDTO selfRegister(UserRequest request) {
-        //1参数校验
-//        request.
-        //2用户输入入库
-
-        //3用户登陆密码入库
-
-        //4生成token返回
-        return null;
+        return selfRegister.register(request);
     }
 
     @Override
     public TokenDTO cmsRegister(UserRequest request) {
-        String token = cmsUserRegister.register(request);
-        return new TokenDTO().setToken(token);
+        return cmsRegister.register(request);
     }
 
     @Override
@@ -93,8 +88,23 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public UserInfoVo checkAccount(UserLoginDTO request) {
+        UserEnums.LoginTypeEnum loginTypeEnum = request.checkLoginName();
+        PUserDO userDO = null;
+        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME){
+            userDO = userMapper.selectByLoginType(request);
+            AssertUtil.isTrue( userDO != null , "找不到对应用户信息");
+            String userInfoKey = USER_INFO_KEY + userDO.getuId();
+            redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
+        }
+        UserInfoVo userInfoVo = new UserInfoVo();
+        BeanUtils.copyProperties(userDO, userInfoVo);
+        return userInfoVo;
+    }
+
+    @Override
     public PUserDO getUser(String userId){
-        String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userId;
+        String userInfoKey = USER_INFO_KEY + userId;
         PUserDO userDO = redisSelfCacheManager.get(userInfoKey, PUserDO.class);
         if (userDO == null){
             userDO = userMapper.selectByUID(userId);
@@ -107,14 +117,14 @@ public class UserServiceImpl implements IUserService {
         if (userDO == null){
             return;
         }
-        String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userDO.getuId();
+        String userInfoKey = USER_INFO_KEY + userDO.getuId();
         redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 5*60);
 
     }
 
     @Override
     public PAccountDO getAccount(String userId){
-        String accountKey = RedisKeyCosntant.USER_ACCOUNT_KEY + userId;
+        String accountKey = USER_ACCOUNT_KEY + userId;
         PAccountDO accountDO = redisSelfCacheManager.get( accountKey, PAccountDO.class);
 
         if (accountDO == null){
@@ -133,7 +143,7 @@ public class UserServiceImpl implements IUserService {
             userDO = userMapper.selectByLoginType(request);
             AssertUtil.isTrue( userDO != null , "登陆信息异常");
             uId = userDO.getuId();
-            String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userDO.getuId();
+            String userInfoKey = USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
         }
 
@@ -142,7 +152,7 @@ public class UserServiceImpl implements IUserService {
         if (userDO == null){
             userDO = userMapper.selectByUID(accountDO.getUId());
             AssertUtil.isTrue( userDO != null , "登陆信息异常");
-            String userInfoKey = RedisKeyCosntant.USER_INFO_KEY + userDO.getuId();
+            String userInfoKey = USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
         }
         //将String数组转成Integer数组
@@ -151,7 +161,11 @@ public class UserServiceImpl implements IUserService {
         return new TokenDTO().setToken(token).setNickName(userDO.getNickName());
     }
 
-    private void checkUpdateRoles(UserRequest request){
+    /**
+     * 检查修改权限并且更新数据
+     * @param request
+     */
+    private void checkRolesAndUpdate(UserRequest request){
         request.setMobilePhone(null);
         request.setLoginName(null);
         Integer[] roles = request.getRoles();
@@ -170,6 +184,7 @@ public class UserServiceImpl implements IUserService {
             userDO.setEmail(request.getEmail());
             userDO.setHeadPic(request.getHeadPic());
             userDO.setSex(request.getSex());
+            userDO.setStatus(request.getStatus());
             if (StringUtils.isNotBlank(request.getPassword())){
                 accountDO.setPassword(MD5.getMD5(request.getPassword())); //MD5加密存储
             }
@@ -204,7 +219,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     @Transactional
     public boolean update(UserRequest request) {
-        checkUpdateRoles(request);
+        checkRolesAndUpdate(request);
         List<String> keys = new ArrayList<>(2);
         keys.add(USER_INFO_KEY + request.getUserId());
         keys.add(USER_ACCOUNT_KEY + request.getUserId());
@@ -231,6 +246,7 @@ public class UserServiceImpl implements IUserService {
         PUserDO userDO = getUser(userId);
         AssertUtil.notNull(userDO, "用户不存在uid"+ userId);
         AssertUtil.isTrue(userMapper.updateStatus(userId, 2) > 0, "用户注销失败");
+        //用户失效依旧走缓存，减轻数据库压力
         userDO.setStatus(2);
         setUser(userDO);
         return true;
@@ -256,14 +272,14 @@ public class UserServiceImpl implements IUserService {
         PAccountDO accountDO = null;
         String psd = MD5.getMD5(password);
         if (StringUtils.isNotBlank(uId)){
-            accountDO = redisSelfCacheManager.get(RedisKeyCosntant.USER_ACCOUNT_KEY + uId, PAccountDO.class);
+            accountDO = redisSelfCacheManager.get(USER_ACCOUNT_KEY + uId, PAccountDO.class);
 
         }
         if (accountDO == null){
             accountDO = accountMapper.selectByUserId(uId, loginName, psd);
         }
         AssertUtil.isTrue( accountDO != null , "账户不存在");
-        redisSelfCacheManager.set(RedisKeyCosntant.USER_ACCOUNT_KEY + accountDO.getUId(), JSON.toJSONString(accountDO), 60 * 3);
+        redisSelfCacheManager.set(USER_ACCOUNT_KEY + accountDO.getUId(), JSON.toJSONString(accountDO), 60 * 3);
         return accountDO;
     }
 }

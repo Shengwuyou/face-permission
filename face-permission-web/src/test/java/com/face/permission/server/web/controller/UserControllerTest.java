@@ -91,7 +91,7 @@ public class UserControllerTest{
 
 
         MvcResult result = this.mockMvc.perform(
-                MockMvcRequestBuilders.post("/user/login")
+                MockMvcRequestBuilders.post("/login")
                         .contentType(MediaType.APPLICATION_JSON_UTF8)
                         .content(JSONObject.toJSONString(registerRequest))
         )

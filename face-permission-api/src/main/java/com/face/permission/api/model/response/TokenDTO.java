@@ -11,9 +11,17 @@ public class TokenDTO {
      */
     private String token;
     /**
+     * 用户id
+     */
+    private String uId;
+    /**
      * 用户昵称
      */
     private String nickName;
+    /**
+     * 用户头像url
+     */
+    private String headPic;
 
     public String getToken() {
         return token;
@@ -30,6 +38,24 @@ public class TokenDTO {
 
     public TokenDTO setNickName(String nickName) {
         this.nickName = nickName;
+        return this;
+    }
+
+    public String getuId() {
+        return uId;
+    }
+
+    public TokenDTO setuId(String uId) {
+        this.uId = uId;
+        return this;
+    }
+
+    public String getHeadPic() {
+        return headPic;
+    }
+
+    public TokenDTO setHeadPic(String headPic) {
+        this.headPic = headPic;
         return this;
     }
 }

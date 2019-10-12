@@ -6,6 +6,7 @@ import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.LoggerUtil;
 import com.face.permission.server.config.ThreadLocalUser;
 import com.face.permission.server.config.annoations.LoginIntercept;
+import com.face.permission.server.config.annoations.RepeatSubmitCheck;
 import com.face.permission.service.template.RedisSelfCacheManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,17 +49,22 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method =  handlerMethod.getMethod();
         //3.对IP 重复提交做拦截
-        String remoteIp = getRemoteIp(request);
-        AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(remoteIp + method.getName(), "IP RUNNING", 5), "请勿重复提交请求");
+        RepeatSubmitCheck repeatSubmitCheck = method.getAnnotation(RepeatSubmitCheck.class);
+        if (repeatSubmitCheck != null){
+            String remoteIp = getRemoteIp(request);
+            AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(remoteIp + method.getName(), "IP RUNNING", 5 * 1000L), "请勿重复提交请求");
+        }
 
         //4.检查请求是否登陆----规则见JWT
         String token = request.getHeader("token");
-        //.检查是否存在登陆拦截
+        //5.检查是否存在登陆拦截
         LoginIntercept loginIntercept = method.getAnnotation(LoginIntercept.class);
         if (loginIntercept != null && loginIntercept.require()){
             UserInfo userInfo = checkToken(token);
             //5.对相同用户 重复提交做拦截
-            AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(userInfo.getUid() + method.getName(), "UID RUNNING", 5), "请勿重复提交请求");
+            if (repeatSubmitCheck != null){
+                AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(userInfo.getUid() + method.getName(), "UID RUNNING", 5 * 1000L), "请勿重复提交请求");
+            }
             String trace = request.getHeader("trace");
             checkTrace(trace);
         }

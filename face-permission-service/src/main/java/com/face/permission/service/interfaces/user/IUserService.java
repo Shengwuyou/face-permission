@@ -48,6 +48,13 @@ public interface IUserService {
     UserInfoVo check(String userId, UserInfo userInfo);
 
     /**
+     * 查询用户详细信息
+     * @param request
+     * @return
+     */
+    UserInfoVo checkAccount(UserLoginDTO request);
+
+    /**
      * 获取用户基本信息
      * @param userId
      * @return
