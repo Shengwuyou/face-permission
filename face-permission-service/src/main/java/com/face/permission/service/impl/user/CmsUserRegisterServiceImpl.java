@@ -1,8 +1,8 @@
 package com.face.permission.service.impl.user;
 
-import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.common.constants.enums.role.RoleEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.service.template.RegisterTemplate;
 import org.springframework.stereotype.Service;

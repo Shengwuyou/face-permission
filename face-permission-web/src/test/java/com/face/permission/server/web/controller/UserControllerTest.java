@@ -1,7 +1,7 @@
 package com.face.permission.server.web.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.face.permission.api.model.request.user.UserRequest;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.utils.CharacterUtils;
 import com.face.permission.common.utils.RandomValueUtil;
 import com.face.permission.server.Application;

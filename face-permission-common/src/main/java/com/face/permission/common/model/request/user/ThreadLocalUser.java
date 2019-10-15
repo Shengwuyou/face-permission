@@ -1,7 +1,6 @@
-package com.face.permission.server.config;
+package com.face.permission.common.model.request.user;
 
 import com.alibaba.fastjson.JSONObject;
-import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.common.constants.ReturnConstant;
 import com.face.permission.common.responses.JwtCheckResult;
 import com.face.permission.common.utils.AssertUtil;

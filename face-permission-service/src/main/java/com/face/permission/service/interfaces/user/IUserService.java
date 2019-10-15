@@ -1,8 +1,8 @@
 package com.face.permission.service.interfaces.user;
 
-import com.face.permission.api.model.request.user.UserInfo;
-import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
+import com.face.permission.common.model.request.user.UserInfo;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.mapper.domain.PAccountDO;
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;

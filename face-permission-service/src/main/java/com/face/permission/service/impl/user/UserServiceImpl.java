@@ -1,13 +1,12 @@
 package com.face.permission.service.impl.user;
 
 import com.alibaba.fastjson.JSON;
-import com.face.permission.api.model.request.user.UserInfo;
-import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
-import com.face.permission.common.constants.RedisKeyCosntant;
 import com.face.permission.common.constants.enums.role.RoleTypeEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
 import com.face.permission.common.exceptions.FaceServiceException;
+import com.face.permission.common.model.request.user.UserInfo;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.utils.*;
 import com.face.permission.mapper.dao.PAccountMapper;
 import com.face.permission.mapper.dao.PRoleMapper;

@@ -1,7 +1,7 @@
 package com.face.permission.server.web.controller;
 
-import com.face.permission.api.model.request.user.UserInfo;
-import com.face.permission.api.model.request.user.UserRequest;
+import com.face.permission.common.model.request.user.UserInfo;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.model.request.valids.groups.UpdateGroup;
 import com.face.permission.common.annoations.AopLog;
 import com.face.permission.common.annoations.LoginIntercept;
@@ -10,7 +10,7 @@ import com.face.permission.common.responses.PaginatedResultData;
 import com.face.permission.common.responses.ResultInfo;
 import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
-import com.face.permission.server.config.ThreadLocalUser;
+import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

@@ -1,12 +1,12 @@
 package com.face.permission.server.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import com.face.permission.api.model.request.user.UserInfo;
 import com.face.permission.common.annoations.LoginIntercept;
 import com.face.permission.common.annoations.RepeatSubmitCheck;
+import com.face.permission.common.model.request.user.UserInfo;
 import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.LoggerUtil;
-import com.face.permission.server.config.ThreadLocalUser;
+import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.service.template.RedisSelfCacheManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ import java.lang.reflect.Method;
 
 import static com.face.permission.common.constants.enums.SystemErrorEnum.UNKONW_HTTP_REQUEST;
 import static com.face.permission.common.utils.HttpIpAddrUtil.getRemoteIp;
-import static com.face.permission.server.config.ThreadLocalUser.checkToken;
-import static com.face.permission.server.config.ThreadLocalUser.checkTrace;
+import static com.face.permission.common.model.request.user.ThreadLocalUser.checkToken;
+import static com.face.permission.common.model.request.user.ThreadLocalUser.checkTrace;
 
 /**
  * @Description

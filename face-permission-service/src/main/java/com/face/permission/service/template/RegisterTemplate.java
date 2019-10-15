@@ -1,10 +1,10 @@
 package com.face.permission.service.template;
 
 import com.alibaba.fastjson.JSON;
-import com.face.permission.api.model.request.user.UserRequest;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.constants.enums.user.UserEnums;
 import com.face.permission.common.exceptions.FaceServiceException;
+import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.utils.AssertUtil;
 import com.face.permission.common.utils.JwtUtils;
 import com.face.permission.common.utils.MD5;
