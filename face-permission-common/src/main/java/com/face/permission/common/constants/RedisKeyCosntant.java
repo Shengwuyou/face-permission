@@ -22,11 +22,12 @@ public interface RedisKeyCosntant {
      */
     String REGISTER_LOCK_KEY = "u_register_";
 
-    /**
-     * 用户注册锁，防止重复注册，以手机号为重复拦截条件
-     */
-    String RECOMMEND_FRIENDS = "recommend_friends";
 
+
+    /**
+     * 用户注册锁，防止重复注册，以手机号为重复拦截条件,有 0 和 1，数据库中当某一个为空之后，表示数据发生变更，那就去取另外一个
+     */
+    String RECOMMEND_FRIENDS = "recommend_friends_";
 
 
 

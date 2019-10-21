@@ -1,12 +1,17 @@
 package com.face.permission.service.template;
 
 import com.alibaba.fastjson.JSONObject;
+import com.face.permission.common.utils.LoggerUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,6 +21,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 public class RedisSelfCacheManager {
+
+    private Logger logger = LoggerUtil.COMMON_DEFAULT;
 
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
@@ -170,4 +177,76 @@ public class RedisSelfCacheManager {
             e.printStackTrace();
         }
     }
+
+
+    public void rightPush(String key, String value) {
+        if (StringUtils.isAnyBlank(key, value)) {
+            return;
+        }
+        try {
+            redisTemplate.opsForList().rightPush(key, value);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+        }
+    }
+
+    public void rightPushAll(String key, List<String> values) {
+        if (Objects.isNull(key) || CollectionUtils.isEmpty(values)) {
+            return;
+        }
+        try {
+            redisTemplate.opsForList().rightPushAll(key, values);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+        }
+    }
+
+    public Object leftPop(String key) {
+        if (Objects.isNull(key)) {
+            return null;
+        }
+        try {
+            return redisTemplate.opsForList().leftPop(key);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+            return null;
+        }
+    }
+
+    public Object rightPop(String key) {
+        if (Objects.isNull(key)) {
+            return null;
+        }
+        try {
+            return redisTemplate.opsForList().rightPop(key);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+            return null;
+        }
+    }
+
+    public Long listSize(String key) {
+        if (Objects.isNull(key)) {
+            return 0L;
+        }
+        try {
+            return redisTemplate.opsForList().size(key);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+            return 0L;
+        }
+    }
+
+    public List<Object> range(String key, Integer start, Integer end) {
+        if (Objects.isNull(key)) {
+            return null;
+        }
+        try {
+            return redisTemplate.opsForList().range(key, start, end);
+        } catch (Exception e) {
+            LoggerUtil.error(logger, e, "redis异常");
+            return null;
+        }
+    }
+
 }

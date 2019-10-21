@@ -94,9 +94,9 @@ public class UserServiceImpl implements IUserService {
     public UserInfoVo checkAccount(UserLoginDTO request) {
         UserEnums.LoginTypeEnum loginTypeEnum = request.checkLoginName();
         PUserDO userDO = null;
-        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME){
+        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME) {
             userDO = userMapper.selectByLoginType(request);
-            AssertUtil.isTrue( userDO != null , "找不到对应用户信息");
+            AssertUtil.isTrue(userDO != null, "找不到对应用户信息");
             String userInfoKey = USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
         }
@@ -106,31 +106,31 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public PUserDO getUser(String userId){
+    public PUserDO getUser(String userId) {
         String userInfoKey = USER_INFO_KEY + userId;
         PUserDO userDO = redisSelfCacheManager.get(userInfoKey, PUserDO.class);
-        if (userDO == null){
+        if (userDO == null) {
             userDO = userMapper.selectByUID(userId);
         }
         return userDO;
     }
 
     @Override
-    public void setUser(PUserDO userDO){
-        if (userDO == null){
+    public void setUser(PUserDO userDO) {
+        if (userDO == null) {
             return;
         }
         String userInfoKey = USER_INFO_KEY + userDO.getuId();
-        redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 5*60);
+        redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 5 * 60);
 
     }
 
     @Override
-    public PAccountDO getAccount(String userId){
+    public PAccountDO getAccount(String userId) {
         String accountKey = USER_ACCOUNT_KEY + userId;
-        PAccountDO accountDO = redisSelfCacheManager.get( accountKey, PAccountDO.class);
+        PAccountDO accountDO = redisSelfCacheManager.get(accountKey, PAccountDO.class);
 
-        if (accountDO == null){
+        if (accountDO == null) {
             accountDO = accountMapper.selectByUserId(userId, null, null);
         }
         return accountDO;
@@ -142,9 +142,9 @@ public class UserServiceImpl implements IUserService {
 
         PUserDO userDO = null;
         String uId = null;
-        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME){
+        if (loginTypeEnum != UserEnums.LoginTypeEnum.LOGIN_NAME) {
             userDO = userMapper.selectByLoginType(request);
-            AssertUtil.isTrue( userDO != null , "登陆信息异常");
+            AssertUtil.isTrue(userDO != null, "登陆信息异常");
             uId = userDO.getuId();
             String userInfoKey = USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
@@ -152,9 +152,9 @@ public class UserServiceImpl implements IUserService {
 
         PAccountDO accountDO = getIfAbsentAccount(uId, request.getLoginName(), request.getPassword());
 
-        if (userDO == null){
+        if (userDO == null) {
             userDO = userMapper.selectByUID(accountDO.getUId());
-            AssertUtil.isTrue( userDO != null , "登陆信息异常");
+            AssertUtil.isTrue(userDO != null, "登陆信息异常");
             String userInfoKey = USER_INFO_KEY + userDO.getuId();
             redisSelfCacheManager.set(userInfoKey, JSON.toJSONString(userDO), 60 * 3);
         }
@@ -166,9 +166,10 @@ public class UserServiceImpl implements IUserService {
 
     /**
      * 检查修改权限并且更新数据
+     *
      * @param request
      */
-    private void checkRolesAndUpdate(UserRequest request){
+    private void checkRolesAndUpdate(UserRequest request) {
         request.setMobilePhone(null);
         request.setLoginName(null);
         Integer[] roles = request.getRoles();
@@ -182,38 +183,55 @@ public class UserServiceImpl implements IUserService {
         userDO.setuId(request.getUserId());
         accountDO.setUId(request.getUserId());
         //本人操作  or   root管理员操作
-        if (Objects.equals(request.getUserId(), request.getUid()) || Arrays.stream(roles).anyMatch(role -> role == 1)){
+        if (Objects.equals(request.getUserId(), request.getUid()) || Arrays.stream(roles).anyMatch(role -> role == 1)) {
             userDO.setNickName(request.getNickName());
             userDO.setEmail(request.getEmail());
             userDO.setHeadPic(request.getHeadPic());
             userDO.setSex(request.getSex());
             userDO.setStatus(request.getStatus());
-            if (StringUtils.isNotBlank(request.getPassword())){
+            if (StringUtils.isNotBlank(request.getPassword())) {
                 accountDO.setPassword(MD5.getMD5(request.getPassword())); //MD5加密存储
             }
             accountDO.setStatus(request.getStatus());
 
-            if (Arrays.stream(request.getRoles()).anyMatch(role -> role == 1)){ //root账号改天改地
+            if (Arrays.stream(request.getRoles()).anyMatch(role -> role == 1)) { //root账号改天改地
                 accountDO.setGrade(request.getGrade());
                 accountDO.setType(request.getType());
                 accountDO.setRoles(JSON.toJSONString(request.getRole()));
             }
-        }else {
+        } else {
             //非用户本人
-            userRoles.forEach(role ->{
-                switch (role.getRoleName()){
-                    case "nickName":  userDO.setNickName(request.getNickName()); break;
-                    case "email":  userDO.setEmail(request.getEmail()); break;
-                    case "headPic":  userDO.setHeadPic(request.getHeadPic()); break;
-                    case "sex":  userDO.setSex(request.getSex()); break;
+            userRoles.forEach(role -> {
+                switch (role.getRoleName()) {
+                    case "nickName":
+                        userDO.setNickName(request.getNickName());
+                        break;
+                    case "email":
+                        userDO.setEmail(request.getEmail());
+                        break;
+                    case "headPic":
+                        userDO.setHeadPic(request.getHeadPic());
+                        break;
+                    case "sex":
+                        userDO.setSex(request.getSex());
+                        break;
 
-                    case "password":  accountDO.setPassword(MD5.getMD5(request.getPassword())); break;
-                    case "grade":  accountDO.setGrade(request.getGrade()); break;
-                    case "type":  accountDO.setType(request.getType()); break;
-                    case "roles":  accountDO.setRoles(JSON.toJSONString(request.getRole())); break;
-                    default: break;
+                    case "password":
+                        accountDO.setPassword(MD5.getMD5(request.getPassword()));
+                        break;
+                    case "grade":
+                        accountDO.setGrade(request.getGrade());
+                        break;
+                    case "type":
+                        accountDO.setType(request.getType());
+                        break;
+                    case "roles":
+                        accountDO.setRoles(JSON.toJSONString(request.getRole()));
+                        break;
+                    default:
+                        break;
                 }
-            } );
+            });
         }
         AssertUtil.isTrue(userMapper.updateByPrimaryKeySelective(userDO) > 0, "更新用户基本信息失败");
         AssertUtil.isTrue(accountMapper.updateByPrimaryKeySelective(accountDO) > 0, "更新用户账号信息失败");
@@ -247,7 +265,7 @@ public class UserServiceImpl implements IUserService {
         //权限检查-是否是本人/是否是root
         AssertUtil.isTrue(Objects.equals(userInfo.getUid(), userId) || Objects.equals(userInfo.getUid(), "1"), "无权限注销");
         PUserDO userDO = getUser(userId);
-        AssertUtil.notNull(userDO, "用户不存在uid"+ userId);
+        AssertUtil.notNull(userDO, "用户不存在uid" + userId);
         AssertUtil.isTrue(userMapper.updateStatus(userId, 2) > 0, "用户注销失败");
         //用户失效依旧走缓存，减轻数据库压力
         userDO.setStatus(2);
@@ -256,18 +274,31 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void refreshRecommendFriends() {
         //刷新好友推荐池，刷入一千条数据 并且组装中组装5组推荐好友
         PageQuery query = new PageQuery();
         query.setPage(0);
         query.setSize(600);
-        List<UserInfoVo>  userInfoVos = userMapper.selectRecommendUsers(query);
+        List<UserInfoVo> userInfoVos = userMapper.selectRecommendUsers(query);
+        int j = userInfoVos.size() % 10;
+        Long listSize = redisSelfCacheManager.listSize(RECOMMEND_FRIENDS + 0);
+
+        Integer aKey = listSize == 0 ? 0 : 1;
+        Integer bKey = listSize == 0 ? 1 : 0;
+
         //缓存好数据-5分钟刷新一次
-        redisSelfCacheManager.set(RECOMMEND_FRIENDS, JSONObject.toJSONString(userInfoVos), 900);
+        for (int i = 0; i < j; i++) {
+            redisSelfCacheManager.rightPush(RECOMMEND_FRIENDS + aKey, JSON.toJSONString(userInfoVos.subList(i * 10, (i + 1) * 10)));
+        }
+        if (j * 10 < userInfoVos.size()) {
+            redisSelfCacheManager.rightPush(RECOMMEND_FRIENDS + aKey, JSON.toJSONString(userInfoVos.subList(j * 10, userInfoVos.size())));
+        }
+
+        redisSelfCacheManager.remove(RECOMMEND_FRIENDS + bKey);
     }
 
-    private String createToken(String uId, Integer[] roles, String nickName, Integer fromWay, String platForm ){
+    private String createToken(String uId, Integer[] roles, String nickName, Integer fromWay, String platForm) {
         UserInfo userInfo = new UserInfo();
         userInfo.setUid(uId);
         userInfo.setRoles(roles);
@@ -282,18 +313,18 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    private PAccountDO getIfAbsentAccount(String uId, String loginName, String password){
+    private PAccountDO getIfAbsentAccount(String uId, String loginName, String password) {
         AssertUtil.isTrue(!StringUtils.isAllBlank(uId, loginName), "用户信息缺失");
         PAccountDO accountDO = null;
         String psd = MD5.getMD5(password);
-        if (StringUtils.isNotBlank(uId)){
+        if (StringUtils.isNotBlank(uId)) {
             accountDO = redisSelfCacheManager.get(USER_ACCOUNT_KEY + uId, PAccountDO.class);
 
         }
-        if (accountDO == null){
+        if (accountDO == null) {
             accountDO = accountMapper.selectByUserId(uId, loginName, psd);
         }
-        AssertUtil.isTrue( accountDO != null , "账户不存在");
+        AssertUtil.isTrue(accountDO != null, "账户不存在");
         redisSelfCacheManager.set(USER_ACCOUNT_KEY + accountDO.getUId(), JSON.toJSONString(accountDO), 60 * 3);
         return accountDO;
     }
