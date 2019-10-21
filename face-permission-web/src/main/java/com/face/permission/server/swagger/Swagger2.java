@@ -70,24 +70,24 @@ public class Swagger2 {
 				forCodeGeneration(true).pathMapping("/").select()// base，最终调用接口后会和paths拼接在一起
 				.build().apiInfo(apiInfo()).enable(isOpenSwagger);
 	}
-
 	/**
 	 * 构建请求接口的设备信息
 	 */
 	private ParameterBuilder buildDeviceInfo() {
 		ParameterBuilder aParameterBuilder3 = new ParameterBuilder();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("lng", "11.111111");  //经度
-		jsonObject.put("lat", "123.111111"); //纬度
-		jsonObject.put("city", "zhejiang");  //城市名称
-		jsonObject.put("chId", "yingyongbao"); //应用名称
-		jsonObject.put("debd", "huawei");     //手机型号
-		jsonObject.put("dml", "xmxiao");
-		jsonObject.put("did", "12123123123");
+		JSONObject deviceValue = new JSONObject();
+		deviceValue.put("lng", "11.111111");  //经度
+		deviceValue.put("lat", "123.111111"); //纬度
+		deviceValue.put("city", "zhejiang");  //城市名称
+		deviceValue.put("chId", "yingyongbao"); //应用名称
+		deviceValue.put("debd", "huawei");     //手机型号
+		deviceValue.put("dml", "xmxiao");
+		deviceValue.put("did", "12123123123");
 
-		aParameterBuilder3.defaultValue(JSON.toJSONString(jsonObject));
-
-		aParameterBuilder3.name(DEVICE).description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌").modelRef(new ModelRef("String")).parameterType("header")
+		aParameterBuilder3.name(DEVICE).description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌")
+				.modelRef(new ModelRef("String"))
+				.parameterType("header")
+				.defaultValue(JSON.toJSONString(deviceValue))
 				.required(false).build();
 		return aParameterBuilder3;
 	}
@@ -98,12 +98,21 @@ public class Swagger2 {
 	 * @return
 	 */
 	private ParameterBuilder buildTraceId() {
+
+		JSONObject traceValue = new JSONObject();
+		traceValue.put("traceId", MD5.getMD5(String.valueOf(System.currentTimeMillis())));   //每次请求生成链路id,比如uuid，md5（时间戳+token）等)
+		traceValue.put("fromWay", ""); //
+		traceValue.put("platform", ""); //
+
+
 		ParameterBuilder aParameterBuilder2 = new ParameterBuilder();
-		aParameterBuilder2.name(TRACEID).description("每次请求生成链路id,比如uuid，md5（时间戳+token）等)，必须给").modelRef(new ModelRef("String")).parameterType("header")
-				.defaultValue(MD5.getMD5(String.valueOf(System.currentTimeMillis()))).required(false).build();
+		aParameterBuilder2.name(TRACEID).description("检查token是否来源正常，必须给")
+				.modelRef(new ModelRef("String"))
+				.parameterType("header")
+				.defaultValue(traceValue.toJSONString())
+				.required(false).build();
 		return aParameterBuilder2;
 	}
-
 
 	/**
 	 *

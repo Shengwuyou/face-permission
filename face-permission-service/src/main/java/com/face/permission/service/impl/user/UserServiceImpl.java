@@ -161,7 +161,10 @@ public class UserServiceImpl implements IUserService {
         //将String数组转成Integer数组
         Integer[] roles = (Integer[]) ConvertUtils.convert(accountDO.getRoles().split(","), Integer.class);
         String token = createToken(userDO.getuId(), roles, userDO.getNickName(), request.getFromWay(), request.getPlatform());
-        return new TokenDTO().setToken(token).setNickName(userDO.getNickName());
+        return new TokenDTO().setToken(token)
+                .setNickName(userDO.getNickName())
+                .setuId(uId)
+                .setHeadPic(userDO.getHeadPic());
     }
 
     /**
