@@ -13,7 +13,7 @@ import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.constants.WebConstant;
 import com.face.permission.common.utils.MD5;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
-import com.face.permission.server.config.SystemConfig;
+import com.face.permission.common.constants.SystemConfig;
 import com.face.permission.service.interfaces.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -36,8 +36,8 @@ import java.util.Set;
 
 /**
  *
- * @author buganhuang
- * @version $Id: Swagger2.java, v 0.1 2018年3月15日 上午11:42:43 buganhuang Exp $
+ * @author xuyizhong
+ * @version $Id: Swagger2
  */
 @EnableSwagger2
 @Configuration

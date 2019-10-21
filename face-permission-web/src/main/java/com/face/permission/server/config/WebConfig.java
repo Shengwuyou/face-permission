@@ -10,6 +10,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
@@ -27,10 +28,24 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
 
+    /**
+     * >>>>>>>>>>>>>>>>>>>>> 请求拦截器处理，过滤, 并且放开swagger的拦截
+     * @return
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 拦截器使用LoginInterceptorHandler   /** 表示对所有请求进行拦截
-        registry.addInterceptor(loginInterceptorHandler()).addPathPatterns("/**");
+
+        registry.addInterceptor(loginInterceptorHandler())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
+    }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 

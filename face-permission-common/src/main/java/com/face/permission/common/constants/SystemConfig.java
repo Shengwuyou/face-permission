@@ -1,4 +1,4 @@
-package com.face.permission.server.config;
+package com.face.permission.common.constants;
 
 /**
  * @Description
