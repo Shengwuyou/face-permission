@@ -7,11 +7,11 @@ package com.face.permission.common.constants;
  */
 public interface WebConstant {
 
-    String TOKENDATA = "tk-data";
+    String TOKENDATA = "token";
 
     String H5_TOKEN_DATA = "h5-tk";
 
-    String TRACEID = "traceId";
+    String TRACEID = "trace";
 
     String DEVICE = "device";
 }

@@ -19,6 +19,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
+import static com.face.permission.common.constants.WebConstant.TOKENDATA;
+import static com.face.permission.common.constants.WebConstant.TRACEID;
 import static com.face.permission.common.constants.enums.SystemErrorEnum.UNKONW_HTTP_REQUEST;
 import static com.face.permission.common.utils.HttpIpAddrUtil.getRemoteIp;
 import static com.face.permission.common.model.request.user.ThreadLocalUser.checkToken;
@@ -56,7 +58,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
         }
 
         //4.检查请求是否登陆----规则见JWT
-        String token = request.getHeader("token");
+        String token = request.getHeader(TOKENDATA);
         //5.检查是否存在登陆拦截
         LoginIntercept loginIntercept = method.getAnnotation(LoginIntercept.class);
         if (loginIntercept != null && loginIntercept.require()){
@@ -65,7 +67,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
             if (repeatSubmitCheck != null){
                 AssertUtil.isTrue(redisSelfCacheManager.setIfAbsent(userInfo.getUid() + method.getName(), "UID RUNNING", 5 * 1000L), "请勿重复提交请求");
             }
-            String trace = request.getHeader("trace");
+            String trace = request.getHeader(TRACEID);
             checkTrace(trace);
         }
         return true;

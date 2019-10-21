@@ -34,6 +34,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static com.face.permission.common.constants.WebConstant.DEVICE;
+import static com.face.permission.common.constants.WebConstant.TRACEID;
+
 /**
  *
  * @author xuyizhong
@@ -84,7 +87,7 @@ public class Swagger2 {
 
 		aParameterBuilder3.defaultValue(JSON.toJSONString(jsonObject));
 
-		aParameterBuilder3.name("device").description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌").modelRef(new ModelRef("String")).parameterType("header")
+		aParameterBuilder3.name(DEVICE).description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌").modelRef(new ModelRef("String")).parameterType("header")
 				.required(false).build();
 		return aParameterBuilder3;
 	}
@@ -96,7 +99,7 @@ public class Swagger2 {
 	 */
 	private ParameterBuilder buildTraceId() {
 		ParameterBuilder aParameterBuilder2 = new ParameterBuilder();
-		aParameterBuilder2.name("traceId").description("每次请求生成链路id,比如uuid，md5（时间戳+token）等)，必须给").modelRef(new ModelRef("String")).parameterType("header")
+		aParameterBuilder2.name(TRACEID).description("每次请求生成链路id,比如uuid，md5（时间戳+token）等)，必须给").modelRef(new ModelRef("String")).parameterType("header")
 				.defaultValue(MD5.getMD5(String.valueOf(System.currentTimeMillis()))).required(false).build();
 		return aParameterBuilder2;
 	}
