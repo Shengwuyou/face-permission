@@ -256,7 +256,7 @@ public class UserServiceImpl implements IUserService {
     }
 
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/1 * * * ?")
     public void refreshRecommendFriends() {
         UserInfo userInfo = ThreadLocalUser.getUserInfo();
         //刷新好友推荐池，刷入一千条数据 并且组装中组装5组推荐好友
