@@ -258,11 +258,10 @@ public class UserServiceImpl implements IUserService {
 
     @Scheduled(cron = "0 0/1 * * * ?")
     public void refreshRecommendFriends() {
-        UserInfo userInfo = ThreadLocalUser.getUserInfo();
         //刷新好友推荐池，刷入一千条数据 并且组装中组装5组推荐好友
         PageQuery query = new PageQuery();
         query.setPage(0);
-        query.setSize(1000);
+        query.setSize(600);
         List<UserInfoVo>  userInfoVos = userMapper.selectRecommendUsers(query);
         //缓存好数据-5分钟刷新一次
         redisSelfCacheManager.set(RECOMMEND_FRIENDS, JSONObject.toJSONString(userInfoVos), 900);
