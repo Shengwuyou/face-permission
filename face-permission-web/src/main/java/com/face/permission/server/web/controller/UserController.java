@@ -12,6 +12,7 @@ import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
 import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.service.interfaces.user.IUserService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +70,14 @@ public class UserController {
     @AopLog(mehtodType = AopLog.MethodTypeEnum.DELETE, mehtodName = "删除用户")
     public ResultInfo<?> delete(@PathVariable("userId") String userId) {
         return ResultInfo.success(userService.delete(ThreadLocalUser.getUserInfo(), userId));
+    }
+
+
+    @ApiOperation(value = "用户推荐好友列表刷新")
+    @PostMapping(value = "recommend/friend")
+    @LoginIntercept
+    @RepeatSubmitCheck
+    public ResultInfo<?> queryFriends() {
+        return ResultInfo.success("OK");
     }
 }

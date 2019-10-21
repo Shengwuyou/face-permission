@@ -23,6 +23,19 @@ public interface RedisKeyCosntant {
     String REGISTER_LOCK_KEY = "u_register_";
 
     /**
+     * 用户注册锁，防止重复注册，以手机号为重复拦截条件
+     */
+    String RECOMMEND_FRIENDS = "recommend_friends";
+
+
+
+
+
+
+
+
+
+    /**
      *
      */
     String ROLE_TYPE_KEY = "u_role_type_";

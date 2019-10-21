@@ -1,12 +1,15 @@
 package com.face.permission.service.impl.user;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.constants.enums.role.RoleTypeEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
 import com.face.permission.common.exceptions.FaceServiceException;
+import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.common.model.request.user.UserInfo;
 import com.face.permission.common.model.request.user.UserRequest;
+import com.face.permission.common.responses.PageQuery;
 import com.face.permission.common.utils.*;
 import com.face.permission.mapper.dao.PAccountMapper;
 import com.face.permission.mapper.dao.PRoleMapper;
@@ -26,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -249,6 +253,19 @@ public class UserServiceImpl implements IUserService {
         userDO.setStatus(2);
         setUser(userDO);
         return true;
+    }
+
+
+    @Scheduled(cron = "0 0/5 * * * ?")
+    public void refreshRecommendFriends() {
+        UserInfo userInfo = ThreadLocalUser.getUserInfo();
+        //刷新好友推荐池，刷入一千条数据 并且组装中组装5组推荐好友
+        PageQuery query = new PageQuery();
+        query.setPage(0);
+        query.setSize(1000);
+        List<UserInfoVo>  userInfoVos = userMapper.selectRecommendUsers(query);
+        //缓存好数据-5分钟刷新一次
+        redisSelfCacheManager.set(RECOMMEND_FRIENDS, JSONObject.toJSONString(userInfoVos), 900);
     }
 
     private String createToken(String uId, Integer[] roles, String nickName, Integer fromWay, String platForm ){

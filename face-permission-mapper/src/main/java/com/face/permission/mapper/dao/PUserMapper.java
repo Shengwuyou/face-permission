@@ -1,5 +1,6 @@
 package com.face.permission.mapper.dao;
 
+import com.face.permission.common.responses.PageQuery;
 import com.face.permission.mapper.domain.PUserDO;
 import com.face.permission.mapper.dto.request.UserLoginDTO;
 import com.face.permission.mapper.query.user.UserQuery;
@@ -49,6 +50,8 @@ public interface PUserMapper {
     Integer selectUserTotal(UserQuery query);
 
     List<UserInfoVo> selectUsers(UserQuery query);
+
+    List<UserInfoVo> selectRecommendUsers(PageQuery query);
 
     List<PUserDO> selectRegisterUsers(@Param(value = "mobile") String mobile, @Param(value = "email") String email);
 }
