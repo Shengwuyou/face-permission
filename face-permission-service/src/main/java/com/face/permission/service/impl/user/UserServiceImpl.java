@@ -163,7 +163,7 @@ public class UserServiceImpl implements IUserService {
         String token = createToken(userDO.getuId(), roles, userDO.getNickName(), request.getFromWay(), request.getPlatform());
         return new TokenDTO().setToken(token)
                 .setNickName(userDO.getNickName())
-                .setuId(uId)
+                .setuId(userDO.getuId())
                 .setHeadPic(userDO.getHeadPic());
     }
 
