@@ -109,24 +109,24 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
         req.put("MethodType", request.getMethod());
         req.put("请求接口", request.getRequestURI());
         req.put("请求参数", request.getParameterMap());
-        BufferedReader reader = null;
-        try {
-            reader = request.getReader();
-            StringBuffer content = new StringBuffer();
-            String line;
-            while ((line = reader.readLine()) != null){
-                content.append(line);
-            }
-            req.put("请求体", content.toString());
-        } catch (IOException e) {
-            logger.info("请求参数处理异常，请求接口：" + request.getMethod());
-        } finally {
-            try {
-                request.getReader().close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        BufferedReader reader = null;
+//        try {
+//            reader = request.getReader();
+//            StringBuffer content = new StringBuffer();
+//            String line;
+//            while ((line = reader.readLine()) != null){
+//                content.append(line);
+//            }
+//            req.put("请求体", content.toString());
+//        } catch (IOException e) {
+//            logger.info("请求参数处理异常，请求接口：" + request.getMethod());
+//        } finally {
+//            try {
+//                request.getReader().close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
         logger.info(req.toJSONString());
     }
 
