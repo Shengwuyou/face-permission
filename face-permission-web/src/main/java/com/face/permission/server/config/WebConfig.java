@@ -38,7 +38,7 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(loginInterceptorHandler())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
+                .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**", "/csrf", "/");
     }
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

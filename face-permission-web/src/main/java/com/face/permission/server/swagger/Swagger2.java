@@ -38,7 +38,6 @@ import static com.face.permission.common.constants.WebConstant.DEVICE;
 import static com.face.permission.common.constants.WebConstant.TRACEID;
 
 /**
- *
  * @author xuyizhong
  * @version $Id: Swagger2
  */
@@ -46,96 +45,100 @@ import static com.face.permission.common.constants.WebConstant.TRACEID;
 @Configuration
 public class Swagger2 {
 
-	@Autowired
-	IUserService userService;
-	@Bean
-	public Docket apiDocker() {
-		Set<String> set = new HashSet<String>();
-		set.add("application/x-www-form-urlencoded");
-		set.add("application/json");
+    @Autowired
+    IUserService userService;
 
-		List<Parameter> aParameters = new ArrayList<Parameter>();
-		aParameters.add(buildLoginToken().build());
-		aParameters.add(buildTraceId().build());     //
-		aParameters.add(buildDeviceInfo().build());  //构建设备信息
+    @Bean
+    public Docket apiDocker() {
+        Set<String> set = new HashSet<String>();
+        set.add("application/x-www-form-urlencoded");
+        set.add("application/json");
 
-		boolean isOpenSwagger = true;
-		if (SystemConfig.isProMode()) {
-			isOpenSwagger = false;
-		}
+        List<Parameter> aParameters = new ArrayList<Parameter>();
+        aParameters.add(buildLoginToken().build());
+        aParameters.add(buildTraceId().build());     //
+        aParameters.add(buildDeviceInfo().build());  //构建设备信息
 
-		return new Docket(DocumentationType.SWAGGER_2).groupName("njia/v1").
-				genericModelSubstitutes(DeferredResult.class).consumes(set).
-				globalOperationParameters(aParameters).useDefaultResponseMessages(false).
-				forCodeGeneration(true).pathMapping("/").select()// base，最终调用接口后会和paths拼接在一起
-				.build().apiInfo(apiInfo()).enable(isOpenSwagger);
-	}
-	/**
-	 * 构建请求接口的设备信息
-	 */
-	private ParameterBuilder buildDeviceInfo() {
-		ParameterBuilder aParameterBuilder3 = new ParameterBuilder();
-		JSONObject deviceValue = new JSONObject();
-		deviceValue.put("lng", "11.111111");  //经度
-		deviceValue.put("lat", "123.111111"); //纬度
-		deviceValue.put("city", "zhejiang");  //城市名称
-		deviceValue.put("chId", "yingyongbao"); //应用名称
-		deviceValue.put("debd", "huawei");     //手机型号
-		deviceValue.put("dml", "xmxiao");
-		deviceValue.put("did", "12123123123");
+        boolean isOpenSwagger = true;
+        if (SystemConfig.isProMode()) {
+            isOpenSwagger = false;
+        }
 
-		aParameterBuilder3.name(DEVICE).description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌")
-				.modelRef(new ModelRef("String"))
-				.parameterType("header")
-				.defaultValue(JSON.toJSONString(deviceValue))
-				.required(false).build();
-		return aParameterBuilder3;
-	}
+        return new Docket(DocumentationType.SWAGGER_2).groupName("njia/v1").
+                genericModelSubstitutes(DeferredResult.class).consumes(set).
+                globalOperationParameters(aParameters).useDefaultResponseMessages(false).
+                forCodeGeneration(true).pathMapping("/").select()// base，最终调用接口后会和paths拼接在一起
+                .build().apiInfo(apiInfo()).enable(isOpenSwagger);
+    }
 
+    /**
+     * 构建请求接口的设备信息
+     */
+    private ParameterBuilder buildDeviceInfo() {
+        ParameterBuilder aParameterBuilder3 = new ParameterBuilder();
+        JSONObject deviceValue = new JSONObject();
+        deviceValue.put("lng", "11.111111");  //经度
+        deviceValue.put("lat", "123.111111"); //纬度
+        deviceValue.put("city", "zhejiang");  //城市名称
+        deviceValue.put("chId", "yingyongbao"); //应用名称
+        deviceValue.put("debd", "huawei");     //手机型号
+        deviceValue.put("dml", "xmxiao");
+        deviceValue.put("did", "12123123123");
 
-	/**
-	 *
-	 * @return
-	 */
-	private ParameterBuilder buildTraceId() {
-
-		JSONObject traceValue = new JSONObject();
-		traceValue.put("traceId", MD5.getMD5(String.valueOf(System.currentTimeMillis())));   //每次请求生成链路id,比如uuid，md5（时间戳+token）等)
-		traceValue.put("fromWay", ""); //
-		traceValue.put("platform", ""); //
+        aParameterBuilder3.name(DEVICE).description("设备信息,不允许出现中文chId:渠道编码:应用宝,dml:设备型号,debd:设备品牌")
+                .modelRef(new ModelRef("String"))
+                .parameterType("header")
+                .defaultValue(JSON.toJSONString(deviceValue))
+                .required(false).build();
+        return aParameterBuilder3;
+    }
 
 
-		ParameterBuilder aParameterBuilder2 = new ParameterBuilder();
-		aParameterBuilder2.name(TRACEID).description("检查token是否来源正常，必须给")
-				.modelRef(new ModelRef("String"))
-				.parameterType("header")
-				.defaultValue(traceValue.toJSONString())
-				.required(false).build();
-		return aParameterBuilder2;
-	}
+    /**
+     * @return
+     */
+    private ParameterBuilder buildTraceId() {
 
-	/**
-	 *
-	 * @return
-	 */
-	private ParameterBuilder buildLoginToken() {
-		ParameterBuilder aParameterBuilder = new ParameterBuilder();
-		UserLoginDTO userLoginDTO = new UserLoginDTO();
-		userLoginDTO.setLoginName("Admin123");
-		userLoginDTO.setPassword("Admin123");
-		TokenDTO token = userService.login(userLoginDTO);
-		aParameterBuilder.name(WebConstant.TOKENDATA).allowMultiple(true)
-				.description(
-						"【ios/安卓】header登录认证信息{'token':'登录令牌'}")
-				.modelRef(new ModelRef("String")).parameterType("header").required(true).build();
+        JSONObject traceValue = new JSONObject();
+        traceValue.put("traceId", MD5.getMD5(String.valueOf(System.currentTimeMillis())));   //每次请求生成链路id,比如uuid，md5（时间戳+token）等)
+        traceValue.put("fromWay", 0); // 来源cms
+        traceValue.put("platform", "pc"); //
 
-		aParameterBuilder.defaultValue(token.getToken());
-		return aParameterBuilder;
-	}
 
-	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("face-permission").description("face-用户管理").termsOfServiceUrl("http://blog.didispace.com/")
-				.contact(new Contact("程序猿", null, null)).version("0.0.1").build();
-	}
+        ParameterBuilder aParameterBuilder2 = new ParameterBuilder();
+        aParameterBuilder2.name(TRACEID).description("检查token是否来源正常，必须给")
+                .modelRef(new ModelRef("String"))
+                .parameterType("header")
+                .defaultValue(traceValue.toJSONString())
+                .required(false).build();
+        return aParameterBuilder2;
+    }
+
+    /**
+     * @return
+     */
+    private ParameterBuilder buildLoginToken() {
+        ParameterBuilder aParameterBuilder = new ParameterBuilder();
+        UserLoginDTO userLoginDTO = new UserLoginDTO();
+        userLoginDTO.setLoginName("Admin123");
+        userLoginDTO.setPassword("Admin123");
+        userLoginDTO.setFromWay(0);
+        userLoginDTO.setPlatform("pc");
+
+
+        TokenDTO token = userService.login(userLoginDTO);
+        aParameterBuilder.name(WebConstant.TOKENDATA).allowMultiple(true)
+                .description(
+                        "【ios/安卓】header登录认证信息{'token':'登录令牌'}")
+                .modelRef(new ModelRef("String")).parameterType("header").required(true).build();
+
+        aParameterBuilder.defaultValue(token.getToken());
+        return aParameterBuilder;
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("face-permission").description("face-用户管理").termsOfServiceUrl("http://blog.didispace.com/")
+                .contact(new Contact("程序猿", null, null)).version("0.0.1").build();
+    }
 
 }

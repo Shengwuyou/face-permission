@@ -14,7 +14,7 @@ import java.io.IOException;
  * @Author xuyizhong
  * @Date 2019-08-07 11:00
  */
-@WebFilter(filterName = "servletRequestStreamFilter", urlPatterns = "/*")
+//@WebFilter(filterName = "servletRequestStreamFilter", urlPatterns = "/*")
 public class ServletRequestStreamFilter implements Filter {
     private Logger logger = LoggerUtil.HTTP_REMOTE;
 

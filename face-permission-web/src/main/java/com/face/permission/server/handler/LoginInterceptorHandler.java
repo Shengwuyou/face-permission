@@ -41,7 +41,7 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //1.记录请求日志
-        logRemote(request);
+//        logRemote(request);
         //2.未知请求，直接拦截
         if(handler == null){
             return false;
@@ -101,14 +101,14 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
     }
 
     /**
-     * 类型：remote - 日志记录请求的接口/参数/地址
+     * 类型：remote - 日志记录请求的接口/参数/地址  改成使用AOP处理
      * @param request
      */
-    private void logRemote(HttpServletRequest request){
-        JSONObject req = new JSONObject();
-        req.put("MethodType", request.getMethod());
-        req.put("请求接口", request.getRequestURI());
-        req.put("请求参数", request.getParameterMap());
+//    private void logRemote(HttpServletRequest request){
+//        JSONObject req = new JSONObject();
+//        req.put("MethodType", request.getMethod());
+//        req.put("请求接口", request.getRequestURI());
+//        req.put("请求参数", request.getParameterMap());
 //        BufferedReader reader = null;
 //        try {
 //            reader = request.getReader();
@@ -127,8 +127,8 @@ public class LoginInterceptorHandler implements HandlerInterceptor {
 //                e.printStackTrace();
 //            }
 //        }
-        logger.info(req.toJSONString());
-    }
+//        logger.info(req.toJSONString());
+//    }
 
 
 }
