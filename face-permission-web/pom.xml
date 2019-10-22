@@ -132,9 +132,9 @@
     <!--多环境配置-->
     <profiles>
         <profile>
-            <id>dev</id>
+            <id>local</id>
             <properties>
-                <profileActive>dev</profileActive>
+                <profileActive>local</profileActive>
                 <serverVersion>${project.version}</serverVersion>
                 <serverName>${project.artifactId}</serverName>
                 <logging.path>${user.home}/logs/face-permission</logging.path>
@@ -142,6 +142,16 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+        </profile>
+
+        <profile>
+            <id>dev</id>
+            <properties>
+                <profileActive>dev</profileActive>
+                <serverVersion>${project.version}</serverVersion>
+                <serverName>${project.artifactId}</serverName>
+                <logging.path>${user.home}/logs/face-permission</logging.path>
+            </properties>
         </profile>
 
         <profile>

@@ -12,6 +12,7 @@ import com.face.permission.mapper.query.user.UserQuery;
 import com.face.permission.mapper.vo.user.UserInfoVo;
 import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.service.interfaces.user.IUserService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +26,8 @@ import java.util.List;
  * @Author xuyizhong
  * @Date 2019-07-18 14:38
  */
+
+@Api(tags = "用户管理模块")
 @RestController
 @RequestMapping(value = "user")
 @Validated
@@ -33,6 +36,7 @@ public class UserController {
     @Autowired
     IUserService userService;
 
+    @ApiOperation(value = "检查用户信息", notes = "根据用户id查询用户信息", httpMethod = "GET")
     @GetMapping(value = "check/{userId}")
     @RepeatSubmitCheck
     public ResultInfo<?> checkUser(@PathVariable(value = "userId") String userId) {
@@ -42,6 +46,7 @@ public class UserController {
         return ResultInfo.success(userInfoVo);
     }
 
+    @ApiOperation(value = "更新用户信息", notes = "更新用户信息", httpMethod = "POST")
     @PostMapping(value = "update")
     @LoginIntercept
     @RepeatSubmitCheck

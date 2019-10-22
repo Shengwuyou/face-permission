@@ -80,6 +80,13 @@ public interface IUserService {
      */
     boolean update(UserRequest request);
 
+    /**
+     * 更新用户头像信息
+     * @param
+     * @return
+     */
+    boolean updateHeadPic(String userId, String headPic);
+
 
     Integer getTotal(UserQuery query);
 

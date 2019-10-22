@@ -251,6 +251,15 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
+    @Override
+    public boolean updateHeadPic(String userId, String headPic) {
+        PUserDO userDO = new PUserDO();
+        userDO.setuId(userId);
+        userDO.setHeadPic(headPic);
+        AssertUtil.isTrue(userMapper.updateByPrimaryKeySelective(userDO) > 0, "邮箱更新成功");
+        redisSelfCacheManager.remove(USER_INFO_KEY + userId);
+        return true;
+    }
 
     @Override
     public Integer getTotal(UserQuery query) {
