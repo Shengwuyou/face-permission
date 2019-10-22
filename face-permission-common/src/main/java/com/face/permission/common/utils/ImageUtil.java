@@ -1,8 +1,6 @@
 package com.face.permission.common.utils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGEncodeParam;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -13,6 +11,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Iterator;
+
 
 /**
  * 图片压缩工具类
@@ -29,42 +28,6 @@ public class ImageUtil {
     private static final String SUFFIX = "-thumbnail";
 
 
-    /**
-     * * 将图片文件输出到指定的路径，并可设定压缩质量
-     *
-     * @param outImgPath
-     * @param newImg
-     * @param per
-     * @author cevencheng
-     */
-    private static void outImage(String outImgPath, BufferedImage newImg, float per) {
-        // 判断输出的文件夹路径是否存在，不存在则创建
-        File file = new File(outImgPath);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        // 输出到文件流
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(outImgPath);
-            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(fos);
-            JPEGEncodeParam jep = JPEGCodec.getDefaultJPEGEncodeParam(newImg);
-            // 压缩质量
-            jep.setQuality(per, true);
-            encoder.encode(newImg, jep);
-            fos.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-    }
 
     /**
      * 图片剪切工具方法
