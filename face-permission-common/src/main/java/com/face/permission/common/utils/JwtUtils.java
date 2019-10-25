@@ -34,7 +34,7 @@ public class JwtUtils {
     /**
      * 5分钟过期
      */
-    public static Long DEFAULT_TOKEN_EXPIRE_TIME =  300 * 1000L ;
+    public static Long DEFAULT_TOKEN_EXPIRE_TIME = 120 * 60 * 1000L ;
 
     /**
      * 签发JWT    ----- 针对无法进行手动失效token的问题，通过版本控制
