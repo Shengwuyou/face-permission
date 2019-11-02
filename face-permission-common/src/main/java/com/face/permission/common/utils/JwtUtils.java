@@ -32,7 +32,7 @@ public class JwtUtils {
 
     public static String TOKEN_ILLEGAL_MSG = "token异常";
     /**
-     * 5分钟过期
+     * 120 分钟过期
      */
     public static Long DEFAULT_TOKEN_EXPIRE_TIME = 120 * 60 * 1000L ;
 

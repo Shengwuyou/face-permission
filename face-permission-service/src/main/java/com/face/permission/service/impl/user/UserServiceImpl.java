@@ -87,7 +87,20 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public UserInfoVo check(String userId, UserInfo userInfo) {
-        return null;
+        UserInfoVo userInfoVo = new UserInfoVo();
+        PUserDO userDO = null;
+        if ( userId == null ){
+            userId = userInfo.getUid();
+        }
+        userDO = getUser(userId);
+        userInfoVo.setuId(userDO.getuId());
+        userInfoVo.setNickName(userDO.getNickName());
+        userInfoVo.setHeadPic(userDO.getHeadPic());
+        userInfoVo.setMobilePhone(userDO.getMobilePhone());
+        userInfoVo.setStatus(userDO.getStatus());
+        return userInfoVo;
+
+
     }
 
     @Override

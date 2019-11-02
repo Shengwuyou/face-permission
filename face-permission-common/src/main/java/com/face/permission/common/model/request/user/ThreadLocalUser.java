@@ -42,6 +42,7 @@ public class ThreadLocalUser {
         return userInfoThreadLocal.get();
     }
 
+
     public static void cleanThreadLocal(){
         userInfoThreadLocal = null;
     }
