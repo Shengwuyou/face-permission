@@ -102,7 +102,7 @@ public abstract class RegisterTemplate {
         userDO.setNickName(request.getNickName());
         userDO.setMobilePhone(request.getMobilePhone());
         userDO.setEmail(request.getEmail());
-        userDO.setHeadPic(request.getHeadPic());
+//        userDO.setHeadPic(request.getHeadPic());
         userDO.setSex(request.getSex());
         userDO.setStatus(UserEnums.UserStatus.AVAILABLE.getCode());
         userDO.setCreateTime(LocalDateTime.now());

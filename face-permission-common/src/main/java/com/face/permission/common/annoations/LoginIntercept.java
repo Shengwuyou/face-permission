@@ -17,4 +17,6 @@ public @interface LoginIntercept {
     //是否需要登陆，默认为需要
     boolean require() default true;
 
+    //require 为 false生效，如果token存在那就解析
+    boolean existSetUserInfo() default true;
 }

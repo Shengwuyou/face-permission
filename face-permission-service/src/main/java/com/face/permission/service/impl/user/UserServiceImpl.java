@@ -1,12 +1,10 @@
 package com.face.permission.service.impl.user;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.face.permission.api.model.response.TokenDTO;
 import com.face.permission.common.constants.enums.role.RoleTypeEnum;
 import com.face.permission.common.constants.enums.user.UserEnums;
 import com.face.permission.common.exceptions.FaceServiceException;
-import com.face.permission.common.model.request.user.ThreadLocalUser;
 import com.face.permission.common.model.request.user.UserInfo;
 import com.face.permission.common.model.request.user.UserRequest;
 import com.face.permission.common.responses.PageQuery;
@@ -95,7 +93,7 @@ public class UserServiceImpl implements IUserService {
         userDO = getUser(userId);
         userInfoVo.setuId(userDO.getuId());
         userInfoVo.setNickName(userDO.getNickName());
-        userInfoVo.setHeadPic(userDO.getHeadPic());
+//        userInfoVo.setHeadPic(userDO.getHeadPic());
         userInfoVo.setMobilePhone(userDO.getMobilePhone());
         userInfoVo.setStatus(userDO.getStatus());
         return userInfoVo;
@@ -176,8 +174,7 @@ public class UserServiceImpl implements IUserService {
         String token = createToken(userDO.getuId(), roles, userDO.getNickName(), request.getFromWay(), request.getPlatform());
         return new TokenDTO().setToken(token)
                 .setNickName(userDO.getNickName())
-                .setuId(userDO.getuId())
-                .setHeadPic(userDO.getHeadPic());
+                .setuId(userDO.getuId());
     }
 
     /**
@@ -202,7 +199,7 @@ public class UserServiceImpl implements IUserService {
         if (Objects.equals(request.getUserId(), request.getUid()) || Arrays.stream(roles).anyMatch(role -> role == 1)) {
             userDO.setNickName(request.getNickName());
             userDO.setEmail(request.getEmail());
-            userDO.setHeadPic(request.getHeadPic());
+//            userDO.setHeadPic(request.getHeadPic());
             userDO.setSex(request.getSex());
             userDO.setStatus(request.getStatus());
             if (StringUtils.isNotBlank(request.getPassword())) {
@@ -224,9 +221,6 @@ public class UserServiceImpl implements IUserService {
                         break;
                     case "email":
                         userDO.setEmail(request.getEmail());
-                        break;
-                    case "headPic":
-                        userDO.setHeadPic(request.getHeadPic());
                         break;
                     case "sex":
                         userDO.setSex(request.getSex());
@@ -264,15 +258,6 @@ public class UserServiceImpl implements IUserService {
         return true;
     }
 
-    @Override
-    public boolean updateHeadPic(String userId, String headPic) {
-        PUserDO userDO = new PUserDO();
-        userDO.setuId(userId);
-        userDO.setHeadPic(headPic);
-        AssertUtil.isTrue(userMapper.updateByPrimaryKeySelective(userDO) > 0, "邮箱更新成功");
-        redisSelfCacheManager.remove(USER_INFO_KEY + userId);
-        return true;
-    }
 
     @Override
     public Integer getTotal(UserQuery query) {

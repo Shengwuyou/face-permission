@@ -7,7 +7,6 @@
         <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
         <result column="mobile_phone" jdbcType="VARCHAR" property="mobilePhone"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
-        <result column="head_pic" jdbcType="VARCHAR" property="headPic"/>
         <result column="sex" jdbcType="TINYINT" property="sex"/>
         <result column="status" jdbcType="TINYINT" property="status"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
@@ -15,7 +14,7 @@
         <result column="ext_json" jdbcType="VARCHAR" property="extJson"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, u_id, nick_name, mobile_phone, email, head_pic, sex, status, create_time, update_time, 
+    id, u_id, nick_name, mobile_phone, email, sex, status, create_time, update_time,
     ext_json
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -91,7 +90,6 @@
         select
         pu.u_id,
         pu.nick_name,
-        pu.head_pic,
         pu.mobile_phone,
         pu.sex,
         pu.email,
@@ -156,7 +154,7 @@
         </where>
     </select>
     <select id="selectRecommendUsers" resultType="com.face.permission.mapper.vo.user.UserInfoVo">
-        SELECT u_id,nick_name,head_pic FROM p_user ORDER BY RAND() LIMIT #{startRow}, #{size}
+        SELECT u_id,nick_name FROM p_user ORDER BY RAND() LIMIT #{startRow}, #{size}
     </select>
 
 
@@ -170,7 +168,7 @@
             SELECT LAST_INSERT_ID();
         </selectKey>
         insert into p_user (u_id, nick_name,
-        mobile_phone, email, head_pic,
+        mobile_phone, email,
         sex, status, create_time,
         update_time, ext_json)
         values (#{uId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR},
@@ -198,9 +196,6 @@
             </if>
             <if test="email != null">
                 email,
-            </if>
-            <if test="headPic != null">
-                head_pic,
             </if>
             <if test="sex != null">
                 sex,
@@ -266,9 +261,6 @@
             <if test="email != null">
                 email = #{email,jdbcType=VARCHAR},
             </if>
-            <if test="headPic != null">
-                head_pic = #{headPic,jdbcType=VARCHAR},
-            </if>
             <if test="sex != null">
                 sex = #{sex,jdbcType=TINYINT},
             </if>
@@ -293,7 +285,6 @@
       nick_name = #{nickName,jdbcType=VARCHAR},
       mobile_phone = #{mobilePhone,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
-      head_pic = #{headPic,jdbcType=VARCHAR},
       sex = #{sex,jdbcType=TINYINT},
       status = #{status,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},

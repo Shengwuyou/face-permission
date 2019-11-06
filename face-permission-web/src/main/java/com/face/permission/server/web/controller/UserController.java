@@ -47,16 +47,16 @@ public class UserController {
         return ResultInfo.success(userInfoVo);
     }
 
-    @ApiOperation(value = "检查用户自己信息", notes = "根据用户id查询用户信息", httpMethod = "GET")
-    @GetMapping(value = "info")
-    @LoginIntercept
-    @RepeatSubmitCheck
-    public ResultInfo<?> userInfo() {
-        UserInfo userInfo = ThreadLocalUser.getUserInfo();
-        //加验签的方法
-        UserInfoVo userInfoVo = userService.check(null, userInfo);
-        return ResultInfo.success(userInfoVo);
-    }
+//    @ApiOperation(value = "检查用户自己信息", notes = "根据用户id查询用户信息", httpMethod = "GET")
+//    @GetMapping(value = "info")
+//    @LoginIntercept
+//    @RepeatSubmitCheck
+//    public ResultInfo<?> userInfo() {
+//        UserInfo userInfo = ThreadLocalUser.getUserInfo();
+//        //加验签的方法
+//        UserInfoVo userInfoVo = userService.check(null, userInfo);
+//        return ResultInfo.success(userInfoVo);
+//    }
 
     @ApiOperation(value = "更新用户信息", notes = "更新用户信息", httpMethod = "POST")
     @PostMapping(value = "update")

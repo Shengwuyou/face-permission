@@ -38,34 +38,5 @@ public class UtilController {
     @Autowired
     private IUserService userService;
 
-    /**
-     * 上传和修改用户头像
-     * @return
-     */
-    @PostMapping(value = "/upload/headImg")
-    @LoginIntercept
-    public ResultInfo<?> uploadUserHead(MultipartFile multipartFile) {
-        JSONObject rt = new JSONObject();
-        UserInfo userInfo = ThreadLocalUser.getUserInfo();
-        try {
-            AssertUtil.notNull(userInfo.getUid(), "用户信息异常");
-            boolean isImage = ImageUtil.isImage(multipartFile.getInputStream());
-            AssertUtil.isTrue(isImage, "格式异常，请上传图片文件");
-            AssertUtil.isTrue(multipartFile.getSize() < 1024 * 1024, "文件不能大于1M");
 
-            String fileDir = String.format(FileDirEnum.USER_HEAD.getFileDir(), userInfo.getUid());
-            String fileName = fileDir + userInfo.getUid() + ".jpg";
-            //压缩上传oss
-            String ETag = ossFaceClientManager.uploadFile(fileName, ImageUtil.resize(multipartFile, 100));
-
-            //文件已经上传成功 开始头像设置
-            userService.updateHeadPic(userInfo.getUid(), String.format(PIC_OSS_NGINX_IP, fileName));
-
-            rt.put("ossFileUrl", String.format(PIC_OSS_NGINX_IP, fileName));
-            rt.put("ossETag", ETag);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return ResultInfo.success(rt);
-    }
 }

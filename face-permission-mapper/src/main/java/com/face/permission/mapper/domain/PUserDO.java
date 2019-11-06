@@ -24,10 +24,7 @@ public class PUserDO {
      * 邮箱
      */
     private String email;
-    /**
-     * 头像图片url
-     */
-    private String headPic;
+
     /**
      * 性别
      */
@@ -87,14 +84,6 @@ public class PUserDO {
 
     public void setEmail(String email) {
         this.email = email == null ? null : email.trim();
-    }
-
-    public String getHeadPic() {
-        return headPic;
-    }
-
-    public void setHeadPic(String headPic) {
-        this.headPic = headPic == null ? null : headPic.trim();
     }
 
     public Integer getSex() {
