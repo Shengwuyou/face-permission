@@ -225,7 +225,6 @@ public class UserServiceImpl implements IUserService {
                     case "sex":
                         userDO.setSex(request.getSex());
                         break;
-
                     case "password":
                         accountDO.setPassword(MD5.getMD5(request.getPassword()));
                         break;
@@ -281,31 +280,6 @@ public class UserServiceImpl implements IUserService {
         userDO.setStatus(2);
         setUser(userDO);
         return true;
-    }
-
-
-    @Scheduled(cron = "0 0/10 * * * ?")
-    public void refreshRecommendFriends() {
-        //刷新好友推荐池，刷入一千条数据 并且组装中组装5组推荐好友
-        PageQuery query = new PageQuery();
-        query.setPage(0);
-        query.setSize(600);
-        List<UserInfoVo> userInfoVos = userMapper.selectRecommendUsers(query);
-        int j = userInfoVos.size() % 10;
-        Long listSize = redisSelfCacheManager.listSize(RECOMMEND_FRIENDS + 0);
-
-        Integer aKey = listSize == 0 ? 0 : 1;
-        Integer bKey = listSize == 0 ? 1 : 0;
-
-        //缓存好数据-5分钟刷新一次
-        for (int i = 0; i < j; i++) {
-            redisSelfCacheManager.rightPush(RECOMMEND_FRIENDS + aKey, JSON.toJSONString(userInfoVos.subList(i * 10, (i + 1) * 10)));
-        }
-        if (j * 10 < userInfoVos.size()) {
-            redisSelfCacheManager.rightPush(RECOMMEND_FRIENDS + aKey, JSON.toJSONString(userInfoVos.subList(j * 10, userInfoVos.size())));
-        }
-
-        redisSelfCacheManager.remove(RECOMMEND_FRIENDS + bKey);
     }
 
     private String createToken(String uId, Integer[] roles, String nickName, Integer fromWay, String platForm) {

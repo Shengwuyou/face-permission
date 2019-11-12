@@ -153,10 +153,6 @@
             </if>
         </where>
     </select>
-    <select id="selectRecommendUsers" resultType="com.face.permission.mapper.vo.user.UserInfoVo">
-        SELECT u_id,nick_name FROM p_user ORDER BY RAND() LIMIT #{startRow}, #{size}
-    </select>
-
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from p_user

@@ -51,7 +51,5 @@ public interface PUserMapper {
 
     List<UserInfoVo> selectUsers(UserQuery query);
 
-    List<UserInfoVo> selectRecommendUsers(PageQuery query);
-
     List<PUserDO> selectRegisterUsers(@Param(value = "mobile") String mobile, @Param(value = "email") String email);
 }
