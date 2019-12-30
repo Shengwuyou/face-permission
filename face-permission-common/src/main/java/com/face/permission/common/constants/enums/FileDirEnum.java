@@ -8,8 +8,7 @@ package com.face.permission.common.constants.enums;
 public enum FileDirEnum {
     USER_HEAD(1, "用户头像路径","user/%s/head/"),
     USER_COVER(1, "用户封面路径","user/%s/cover/"),
-    USER_PICTUREAS(1, "用户图片库路径","user/%s/pictures/"),
-    USER_NEWS(1, "用户发布的动态图片路径","user/%s/head/");
+    USER_PICTUREAS(1, "用户图片库路径","user/%s/pictures/");
 
     private Integer code;
     private String msg;
