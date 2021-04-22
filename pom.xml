@@ -31,7 +31,7 @@
         <oss.version>2.8.3</oss.version>
 
         <mybatis-generator.version>1.3.2</mybatis-generator.version>
-        <mybatis.version>3.5.1</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis-spring.version>2.0.1</mybatis-spring.version>
         <mybatis-typeHandler.version>1.0.2</mybatis-typeHandler.version>
 
